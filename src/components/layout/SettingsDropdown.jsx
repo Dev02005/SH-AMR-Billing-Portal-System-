@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MenuPopup, { MenuGroup, MenuItem } from '../ui/MenuPopup';
 import { activeTheme, setTheme } from '../../styles/theme';
 import { GearIcon } from '../ui/icons';
+import { fullScreenSupported, isFullScreen, onFullScreenChange, toggleFullScreen } from '../../utils/fullscreen';
 
 /** Turn a stored username into something worth showing on screen. */
 function displayName(user) {
@@ -27,10 +28,16 @@ export default function SettingsDropdown({
   onAddMenu,
   onEditMenu,
   onDeleteMenu,
+  allowFullScreen = false,
 }) {
   const [openGroup, setOpenGroup] = useState(null);
   const [theme, setThemeState] = useState(() => activeTheme());
+  const [fullScreen, setFullScreen] = useState(() => isFullScreen());
   const isAdmin = user?.role === 'admin';
+  const showFullScreen = allowFullScreen && fullScreenSupported();
+
+  // Esc or the phone's back gesture also leave full screen; keep the label true.
+  useEffect(() => onFullScreenChange(() => setFullScreen(isFullScreen())), []);
 
   const toggle = (name) => setOpenGroup((current) => (current === name ? null : name));
 
@@ -91,6 +98,12 @@ export default function SettingsDropdown({
                 Dark
               </MenuItem>
             </MenuGroup>
+
+            {showFullScreen && (
+              <MenuItem onClick={run(toggleFullScreen)}>
+                {fullScreen ? 'Exit full screen' : 'Full screen'}
+              </MenuItem>
+            )}
 
             <div className="menu-divider" />
 

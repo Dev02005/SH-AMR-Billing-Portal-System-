@@ -656,3 +656,104 @@
     justify-content: center !important;
   }
 }
+
+/* --- Phones and small tablets -------------------------------------------
+   The report tables used to keep a 600-680px minimum width, so on a phone
+   the first column filled the screen and the numbers sat off to the right.
+   The summary tables (three columns) now fit the screen, and each bill in
+   the register becomes a compact block of its own. The sections no longer
+   scroll sideways themselves - that also clipped the Manage bill menu. */
+@media (max-width: 768px) {
+  .analytics-container .report-section {
+    overflow: visible;
+  }
+  .report-table.report-table-fit {
+    min-width: 0;
+  }
+  .report-table.report-table-fit th,
+  .report-table.report-table-fit td {
+    padding: 10px 8px;
+  }
+  .report-table.report-table-fit th:first-child,
+  .report-table.report-table-fit td:first-child {
+    text-align: left;
+  }
+  .report-table.report-table-fit .qty-cell,
+  .report-table.report-table-fit .amount-cell {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .report-table.register-table {
+    min-width: 0;
+  }
+  .report-table.register-table thead {
+    display: none;
+  }
+  /* One bill:   #4   30/9/2026, 11:13 pm          ₹980.00
+                      Dine-in / Take Out             4 items
+                      Cash / UPI                                  */
+  .report-table.register-table tbody tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "no date amount"
+      "no type items"
+      "no pay  pay";
+    column-gap: 12px;
+    row-gap: 3px;
+    align-items: baseline;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .report-table.register-table td {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+  .report-table.register-table .bill-no-cell {
+    grid-area: no;
+    align-self: center;
+    min-width: 36px;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .report-table.register-table .bill-no-cell::before {
+    content: '#';
+    opacity: 0.6;
+  }
+  .report-table.register-table .register-date {
+    grid-area: date;
+    font-size: 13px;
+  }
+  .report-table.register-table .amount-cell {
+    grid-area: amount;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .report-table.register-table .event-cell {
+    grid-area: type;
+    font-size: 13px;
+  }
+  .report-table.register-table .qty-cell {
+    grid-area: items;
+    text-align: right;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .report-table.register-table .qty-cell::after {
+    content: attr(data-suffix);
+  }
+  .report-table.register-table .register-payment {
+    grid-area: pay;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .report-table.register-table .no-data {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    padding: 16px 0;
+    text-align: center;
+  }
+}

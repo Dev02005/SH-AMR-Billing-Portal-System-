@@ -19,6 +19,7 @@ function ServerPortal() {
         loginPath={LOGIN_PATH}
         showTablesBtn
         onTables={() => window.dispatchEvent(new Event('server:openTables'))}
+        allowFullScreen
       />
       <ServerDashboard />
       <footer className="page-footer" role="contentinfo">

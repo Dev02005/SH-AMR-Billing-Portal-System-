@@ -31,6 +31,22 @@ const SERIES = [
 
 const BASE_OPTIONS = { responsive: true, maintainAspectRatio: false };
 
+/** Long item names squeezed the bars and were cut off at the left edge of a
+ *  phone; the axis shows a shortened name, the tooltip still the full one. */
+function shortName(name) {
+  const limit = window.innerWidth <= 600 ? 16 : 30;
+  return name.length > limit ? `${name.slice(0, limit - 1).trimEnd()}…` : name;
+}
+
+const ITEMS_OPTIONS = {
+  ...BASE_OPTIONS,
+  indexAxis: 'y',
+  plugins: { legend: { display: false } },
+  scales: {
+    y: { ticks: { callback(value) { return shortName(String(this.getLabelForValue(value))); } } },
+  },
+};
+
 function ChartCard({ title, hasData, emptyText, children }) {
   return (
     <div className="chart-container">
@@ -87,10 +103,7 @@ export default function AnalyticsCharts({ topItems = [], paymentTotals = {}, tre
     <>
       <div className="charts-grid">
         <ChartCard title="Top items by quantity" hasData={topItems.length > 0} emptyText="No sales in this period">
-          <Bar
-            data={itemsChart}
-            options={{ ...BASE_OPTIONS, indexAxis: 'y', plugins: { legend: { display: false } } }}
-          />
+          <Bar data={itemsChart} options={ITEMS_OPTIONS} />
         </ChartCard>
 
         <ChartCard title="Payment methods" hasData={paymentLabels.length > 0} emptyText="No payment data">

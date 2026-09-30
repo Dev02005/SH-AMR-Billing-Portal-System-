@@ -30,7 +30,7 @@ function SortableTable({ title, rows, columns, emptyText, totalLabel }) {
     <div className="report-section">
       <h3>{title}</h3>
       <div className="table-responsive">
-        <table className="report-table">
+        <table className="report-table report-table-fit">
           <thead>
             <tr>
               {columns.map((column) => (

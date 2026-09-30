@@ -13,12 +13,15 @@ import './MenuPopup.css';
  * flip to whichever side has room.
  *
  * @param align - which edge of the trigger the panel lines up with.
+ * @param buttonClassName - the trigger's look: an icon button by default, or
+ *   any other button style (e.g. the register's "Manage bill").
  */
 export default function MenuPopup({
   trigger,
   align = 'right',
   label,
   className = '',
+  buttonClassName = 'icon-btn',
   children,
 }) {
   const [open, setOpen] = useState(false);
@@ -88,7 +91,7 @@ export default function MenuPopup({
       <button
         type="button"
         ref={anchorRef}
-        className={`icon-btn ${open ? 'is-open' : ''}`}
+        className={`${buttonClassName} ${open ? 'is-open' : ''}`}
         onClick={() => setOpen((current) => !current)}
         aria-haspopup="menu"
         aria-expanded={open}

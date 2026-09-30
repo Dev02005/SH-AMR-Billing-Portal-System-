@@ -17,6 +17,7 @@ export default function SharedHeader({
   backRoute = '/billing',
   loginPath = '/billing/login',
   showSettingsBtn = true,
+  allowFullScreen = false,
   showDownloadBtn = false,
   onDownload,
   showHeaderInfo = true,
@@ -59,6 +60,7 @@ export default function SharedHeader({
               onAddMenu={onAddMenu}
               onEditMenu={onEditMenu}
               onDeleteMenu={onDeleteMenu}
+              allowFullScreen={allowFullScreen}
             />
           )}
           {onRefresh && (

@@ -33,6 +33,7 @@ function KitchenPortal() {
         loginPath={LOGIN_PATH}
         onRefresh={refreshBoard}
         refreshing={refreshing}
+        allowFullScreen
       />
       <KitchenDashboard />
       <footer className="page-footer" role="contentinfo">

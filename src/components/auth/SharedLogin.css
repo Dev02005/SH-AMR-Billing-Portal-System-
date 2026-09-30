@@ -139,12 +139,24 @@
     display: inline;
   }
 }
-/* Phones: the first brand line cannot wrap, so the room for the button is
-   taken from the right side only and the brand centres in what is left. */
-@media (max-width: 480px) {
+/* Phones: the button gets a small row of its own at the top right, so the
+   brand below it is centred on the whole screen. (Taking the button's room
+   from the brand's right side pushed the name off-centre to the left.) */
+@media (max-width: 600px) {
   .header-container .header-brand-info {
-    padding: 0 84px 0 0;
+    padding: 0;
   }
+  .install-app {
+    position: static;
+    transform: none;
+    order: -1;
+    align-self: flex-end;
+  }
+}
+/* No button - the portal is already installed on this device, or the browser
+   cannot install it: no room is kept for it, so the brand sits in the middle. */
+.header-container:has(> .install-app:empty) .header-brand-info {
+  padding: 0 16px;
 }
 
 .brand-s {

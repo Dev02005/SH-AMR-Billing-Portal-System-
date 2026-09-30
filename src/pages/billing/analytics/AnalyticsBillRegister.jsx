@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { deleteBillPermanently } from '../../../api';
 import { errorMessage } from '../../../api/client';
 import ReprintBill from '../../../components/receipt/ReprintBill';
+import MenuPopup, { MenuItem } from '../../../components/ui/MenuPopup';
 import { dateTime, rupees } from '../../../utils/format';
 
 const PAGE_SIZE = 50;
@@ -38,7 +39,6 @@ export default function AnalyticsBillRegister({ bills = [], onRefresh, notify })
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState('');
   const [confirming, setConfirming] = useState(null);
-  const [manageOpen, setManageOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkSelected, setBulkSelected] = useState(() => new Set());
   const [printOpen, setPrintOpen] = useState(false);
@@ -115,7 +115,6 @@ export default function AnalyticsBillRegister({ bills = [], onRefresh, notify })
     try {
       await action(bill.id);
       await onRefresh();
-      setManageOpen(false);
       notify?.(`Bill #${bill.token} deleted permanently`, 'success');
     } catch (err) {
       const message = errorMessage(err, 'The change could not be saved');
@@ -137,35 +136,23 @@ export default function AnalyticsBillRegister({ bills = [], onRefresh, notify })
           </span>
         </h3>
         <div className="register-pager">
-          <div className={`manage-bill ${manageOpen ? 'open' : ''}`}>
-            <button
-              type="button"
-              className="toggle-hidden-btn manage-bill-trigger"
-              onClick={() => setManageOpen((open) => !open)}
-            >
-              Manage bill
-            </button>
-            {manageOpen && (
-              <div className="manage-bill-menu" role="menu">
-                <button
-                  type="button"
-                  role="menuitem"
-                  className="manage-bill-item manage-bill-action"
-                  onClick={() => { setManageOpen(false); setPrintOpen(true); }}
-                >
-                  <span className="manage-bill-token">Print bill</span>
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  className="manage-bill-item manage-bill-action"
-                  onClick={() => { setManageOpen(false); setBulkOpen(true); }}
-                >
-                  <span className="manage-bill-token danger">Permanently delete bills</span>
-                </button>
-              </div>
+          {/* The shared popup sits above the page and keeps itself on screen;
+              drawn inside the section it ran off the left edge of a phone
+              and was clipped by the section's sideways scrolling. */}
+          <MenuPopup
+            trigger="Manage bill"
+            label="Manage bill"
+            buttonClassName="toggle-hidden-btn manage-bill-trigger"
+          >
+            {(close) => (
+              <>
+                <MenuItem onClick={() => { close(); setPrintOpen(true); }}>Print bill</MenuItem>
+                <MenuItem onClick={() => { close(); setBulkOpen(true); }} danger>
+                  Permanently delete bills
+                </MenuItem>
+              </>
             )}
-          </div>
+          </MenuPopup>
           <button type="button" className="toggle-hidden-btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage <= 1}>◀</button>
           <button type="button" className="toggle-hidden-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage >= totalPages}>▶</button>
         </div>
@@ -184,7 +171,7 @@ export default function AnalyticsBillRegister({ bills = [], onRefresh, notify })
       {error && <p className="modal-note modal-note-error">{error}</p>}
 
       <div className="table-responsive">
-        <table className="report-table">
+        <table className="report-table register-table">
           <thead>
             <tr>
               {COLUMNS.map((column) => (
@@ -204,11 +191,11 @@ export default function AnalyticsBillRegister({ bills = [], onRefresh, notify })
             {visible.map((bill) => (
               <tr key={bill.id}>
                 <td className="bill-no-cell">{bill.token}</td>
-                <td>{dateTime(bill.createdAt)}</td>
+                <td className="register-date">{dateTime(bill.createdAt)}</td>
                 <td className="event-cell">{bill.orderType}</td>
-                <td className="qty-cell">{bill.itemCount}</td>
+                <td className="qty-cell" data-suffix={bill.itemCount === 1 ? ' item' : ' items'}>{bill.itemCount}</td>
                 <td className="amount-cell">{rupees(bill.total)}</td>
-                <td>{bill.payment}</td>
+                <td className="register-payment">{bill.payment}</td>
               </tr>
             ))}
           </tbody>
