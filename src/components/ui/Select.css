@@ -1,0 +1,139 @@
+/* Custom dropdown. The trigger inherits the surrounding surface so one
+   component works on the dark panels and inside the white modals. */
+
+.ui-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ui-select:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.ui-select:focus-visible,
+.ui-select.is-open {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.22);
+}
+
+.ui-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ui-select-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.ui-select-value.is-placeholder {
+  color: var(--muted);
+  text-transform: none;
+}
+
+.ui-select-caret {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: transform 0.18s ease;
+}
+
+.ui-select.is-open .ui-select-caret {
+  transform: rotate(180deg);
+}
+
+/* --- the popup (rendered in a portal, so it is never clipped) --- */
+
+.ui-select-list {
+  position: fixed;
+  z-index: 10001;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--panel-6);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  animation: ui-select-in 0.14s ease-out;
+  scrollbar-width: thin;
+}
+
+.ui-select-option {
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  text-transform: capitalize;
+  user-select: none;
+}
+
+.ui-select-option.is-active {
+  background: rgba(163, 230, 53, 0.16);
+}
+
+.ui-select-option.is-selected {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 700;
+}
+
+.ui-select-empty {
+  padding: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@keyframes ui-select-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-select-list { animation: none; }
+  .ui-select-caret { transition: none; }
+}
+
+/* Inside the modal cards the trigger follows the modal palette
+   (paper card in dark mode, dusky card in light mode). */
+.modal-content .ui-select {
+  background: var(--modal-bg);
+  border-color: var(--modal-line);
+  color: var(--modal-ink);
+}
+
+.modal-content .ui-select:hover:not(:disabled),
+.modal-content .ui-select.is-open {
+  border-color: var(--accent);
+}
+
+.modal-content .ui-select-value.is-placeholder {
+  color: var(--modal-muted);
+}
+
+.modal-content .ui-select-caret {
+  color: var(--modal-muted);
+}
+
+@media print {
+  .ui-select-list { display: none !important; }
+}

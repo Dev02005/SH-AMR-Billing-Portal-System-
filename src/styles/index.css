@@ -1,0 +1,3732 @@
+/* Component styles added during the restructure; last so they can refine
+   the legacy rules without needing !important. */
+@import url('./components.css');
+
+/* ===== THEME VARIABLES =====
+ *
+ * The dark palette is the restaurant's original look (lime-on-black, built for
+ * a bright kitchen and a dim counter). The light palette overrides the same
+ * variables when <html data-theme="light"> is set — either by the pre-paint
+ * script in index.html or by the toggle in the settings menu (src/styles/theme.js).
+ *
+ * Rules that used to hard-code dark greys (`#1a1a1a`, `#0a0a0a`, `#111`, …)
+ * now read these variables, so both palettes stay in step.
+ */
+:root {
+  /* Surfaces */
+  --bg: #0F120D;
+  --bg-2: #0a0a0a;
+  --panel: #1B1F17;
+  --card-bg: #1B1F17;
+  --header-grad-a: #000000;
+  --header-grad-b: #1a1a1a;
+  --header-grad-c: #0a0a0a;
+  --input-bg: #23291d;
+  --input-border: #555555;
+  --panel-2: #2a2a2a;
+  --panel-3: #171c12;
+  --panel-4: #2b3123;
+  --panel-5: #23291d;
+  --panel-6: #1b2016;
+  --hover: rgba(255, 255, 255, 0.06);
+  --scroll-track: rgba(0, 0, 0, 0.2);
+
+  /* Text */
+  --text: #FFFFFF;
+  --muted: #A1A1AA;
+  --text-strong: #FFFFFF;
+  --text-soft: #d6dbcf;
+  --text-heading: #FFFFFF;
+
+  /* Brand */
+  --accent: #A3E635;
+  --accent-contrast: #10140d;
+  --primary: #4D7C0F;
+  --accent-soft: rgba(163, 230, 53, 0.16);
+  --accent-soft-text: #C8F178;
+  --brand-s: #43a047;
+  --brand-amp: #000000;
+  --brand-h: #c98f0a;
+  --gold: var(--accent);
+  --gold-dark: var(--accent);
+  --red: var(--danger);
+  --green: var(--primary);
+  --hover-glow: rgba(163, 230, 53, 0.18);
+
+  /* Status */
+  --danger: #C62828;
+  --danger-strong: #ff6b6b;
+  --danger-soft: rgba(255, 107, 107, 0.14);
+  --danger-soft-text: #FF9E96;
+  --warn: #ffb74d;
+  --warn-strong: var(--warn-strong);
+  --warn-soft: rgba(255, 183, 77, 0.15);
+  --warn-soft-text: #FFCB7D;
+  --ok: #4dd0a0;
+  --info: var(--info);
+  --info-soft: rgba(96, 165, 250, 0.14);
+  --info-soft-text: #A8C8F0;
+  --ready: #4ade80;
+  --ready-strong: #22c55e;
+  --amber: #f59e0b;
+  --amber-strong: #d97706;
+
+  /* Lines & shadows */
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: #555555;
+  --shadow: rgba(0, 0, 0, 0.5);
+
+  /* Ink for text that sits on the paper-white bill/receipt. */
+  --ink: #10140d;
+  /* Dialogs follow the theme: dark olive card on dark, dusky on light. */
+  --modal-bg: #1F2419;
+  --modal-ink: #F2F5EA;
+  --modal-muted: #A8B29A;
+  --modal-line: #3A422D;
+  --modal-soft: #2A3121;
+  /* Paper-like light surfaces inside the dark UI (inputs, list rows). */
+  --paper: #F0F0F0;
+  --paper-2: #E0E0E0;
+
+  /* Print (thermal receipt) — always paper */
+  --print-bg: #fff;
+  --print-text: #000;
+}
+
+html[data-theme='light'] {
+  /* Surfaces — dusky sage, deliberately not stark white */
+  --bg: #E4E8DA;
+  --bg-2: #DDE2D0;
+  --panel: #EDEFE3;
+  --card-bg: #EDEFE3;
+  --header-grad-a: #D6DCCA;
+  --header-grad-b: #E4E8DA;
+  --header-grad-c: #EDEFE3;
+  --input-bg: #F6F7EF;
+  --input-border: #AEB89E;
+  --panel-2: #DFE3D2;
+  --panel-3: #E8EBDD;
+  --panel-4: #D8DEC8;
+  --panel-5: #DFE3D2;
+  --panel-6: #EDEFE3;
+  --hover: rgba(0, 0, 0, 0.06);
+  --scroll-track: rgba(0, 0, 0, 0.1);
+
+  /* Text */
+  --text: #232B1A;
+  --muted: #55604A;
+  --text-strong: #141A0C;
+  --text-soft: #38422B;
+  --text-heading: #222A18;
+
+  /* Brand — deeper lime for contrast on light surfaces */
+  --accent: #4D7C0F;
+  --accent-contrast: #FFFFFF;
+  --primary: #4D7C0F;
+  --accent-soft: #E4EAD6;
+  --accent-soft-text: #3F6212;
+  --brand-s: var(--ok);
+  --brand-amp: #1D2415;
+  --brand-h: #B45309;
+  --hover-glow: rgba(77, 124, 15, 0.15);
+
+  /* Status */
+  --danger: #B3261E;
+  --danger-strong: #C62828;
+  --danger-soft: #FCE8E6;
+  --danger-soft-text: #8C1D18;
+  --warn: #A15C00;
+  --warn-strong: #8A5A00;
+  --warn-soft: #FFF3DC;
+  --warn-soft-text: #6D4700;
+  --ok: #1B7A5A;
+  --info: var(--info);
+  --info-soft: #E8F0FB;
+  --info-soft-text: #274B79;
+  --ready: #15803D;
+  --ready-strong: #166534;
+  --amber: #B45309;
+  --amber-strong: #92400E;
+
+  /* Lines & shadows */
+  --line: rgba(0, 0, 0, 0.14);
+  --line-strong: #B9C2A8;
+  --shadow: rgba(24, 32, 16, 0.25);
+
+  /* Ink for text that sits on the paper-white bill/receipt. */
+  --ink: #10140d;
+  /* Dialogs follow the theme: dusky card, dark ink. */
+  --modal-bg: #F4F5EC;
+  --modal-ink: #1F2617;
+  --modal-muted: #55604A;
+  --modal-line: #D3D9C4;
+  --modal-soft: #E8EBDD;
+  /* Paper-like surfaces stay light in both themes. */
+  --paper: #F6F7EF;
+  --paper-2: #E4E8DA;
+}
+
+/* ===== BASE ===== */
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: var(--font-ui);
+  background: linear-gradient(135deg, var(--bg) 0%, var(--panel) 100%);
+  color: var(--text);
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color-scheme: dark;
+}
+html[data-theme='light'] body {
+  color-scheme: light;
+}
+
+/* ===== TYPOGRAPHY =====
+ *
+ * Inter Variable (bundled, see src/styles/typography.js) replaces the Segoe UI
+ * fallback stack. A small type scale keeps sizes consistent; the fluid
+ * clamp() sizes track the viewport so nothing needs a separate mobile
+ * stylesheet just for type.
+ */
+:root {
+  --font-ui: 'Inter Variable', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --fs-xs: 0.75rem;   /* 12 — fine print, meta */
+  --fs-sm: 0.8125rem; /* 13 — buttons, labels */
+  --fs-md: 0.9063rem; /* 14.5 — body, table cells */
+  --fs-lg: 1.0625rem; /* 17 — card titles, totals on small */
+  --fs-xl: clamp(1.125rem, 0.9rem + 0.6vw, 1.375rem);   /* 18–22 */
+  --fs-2xl: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);     /* 24–36 */
+  --fs-brand: clamp(1.25rem, 0.9rem + 1.8vw, 2rem);     /* 20–32 header */
+}
+
+html, body {
+  font-family: var(--font-ui);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11'; /* single-storey a — friendlier at small sizes */
+}
+
+/* Money, counts and timestamps never jitter as values change. */
+.bill-number,
+.total,
+.total-line,
+.item-price,
+.ticket-qty,
+.ticket-age,
+.column-count,
+.kitchen-footnote,
+.bill-items td,
+.bill-items th {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Headings: a touch tighter, brand row uses the fluid size. */
+h1, h2, h3 {
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.header h1 {
+  font-size: var(--fs-brand);
+  font-weight: 800;
+}
+.header h3 {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+}
+
+/* ===== RECOVERED LAYOUT RULES =====
+
+   The rules below are the original index.css body (layout, bill, tickets,
+   login, analytics chrome and the print styles), recovered from the Sep 10
+   production bundle when the source file was truncated during the theme
+   refactor. Formatting was restored mechanically; rules are unchanged apart
+   from the gradient substitutions above.
+*/
+
+.qty-print{
+display:none
+}
+@media print{
+.qty-print{
+display:inline-block!important
+}
+
+}
+.header h1{
+color:var(--gold);
+text-shadow:2px 2px 8px var(--hover-glow);
+letter-spacing:clamp(.5px,.15vw,1px);
+flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin:0;
+padding:0 140px;
+font-size:clamp(18px,3.5vw,32px);
+line-height:1.2;
+display:flex
+}
+.header-info{
+flex-direction:row;
+justify-content:space-between;
+align-items:flex-start;
+gap:4px;
+width:100%;
+margin:12px 0 20px;
+padding:0 20px;
+display:flex
+}
+.location,.owner{
+color:var(--muted);
+font-size:clamp(11px,1.5vw,13px);
+display:block
+}
+.location{
+text-align:left;
+max-width:60%
+}
+.owner{
+text-align:right
+}
+.location strong,.owner strong{
+color:var(--gold);
+margin-right:4px;
+font-weight:600
+}
+.header-top-row{
+flex-wrap:wrap;
+justify-content:space-between;
+align-items:flex-start;
+gap:8px;
+width:100%;
+margin-bottom:-2px;
+padding:0 20px 6px;
+display:flex;
+position:relative;
+top:-8px
+}
+.menu-item[data-has-image]:before{
+background:linear-gradient(135deg,#00000059 0%,#00000073 100%)
+}
+.menu-item[data-has-image]:hover:before{
+background:linear-gradient(135deg,#0003 0%,#0000004d 100%)
+}
+.qty-controls{
+justify-content:center;
+align-items:center;
+gap:2px;
+display:flex
+}
+.qty-btn{
+cursor:pointer;
+border:none;
+border-radius:4px;
+justify-content:center;
+align-items:center;
+width:32px;
+height:32px;
+padding:0;
+font-size:16px;
+font-weight:700;
+transition:all .2s;
+display:flex;
+box-shadow:0 2px 8px #a3e6351f;
+background:var(--accent)!important;
+color:var(--ink)!important
+}
+.qty-btn:hover{
+transform:scale(1.1);
+background:var(--accent)!important
+}
+.qty-btn:active{
+transform:scale(.95)
+}
+.qty-display{
+min-width:20px;
+font-size:15px;
+font-weight:600;
+visibility:visible!important;
+display:inline-block!important
+}
+.actions{
+flex-wrap:wrap;
+flex-shrink:0;
+gap:8px;
+display:flex
+}
+.modal{
+z-index:2000;
+-webkit-backdrop-filter:blur(4px);
+backdrop-filter:blur(4px);
+background:#000000b3;
+justify-content:center;
+align-items:center;
+width:100%;
+height:100%;
+padding:12px;
+display:none;
+position:fixed;
+top:0;
+left:0
+}
+.add-menu-tabs{
+gap:8px;
+margin:4px 0 12px;
+display:flex
+}
+.add-menu-tab{
+text-align:center;
+flex:1;
+padding:10px 8px
+}
+@media (width<=480px){
+.modal-content{
+width:94%;
+max-width:360px;
+padding:18px
+}
+.modal-header h2{
+font-size:18px
+}
+.add-menu-tabs{
+gap:6px;
+margin:2px 0 10px
+}
+.add-menu-tab{
+padding:8px 6px;
+font-size:12px
+}
+.form-group label{
+font-size:12px
+}
+.form-group input,.form-group select{
+padding:8px 10px;
+font-size:13px
+}
+.modal-actions button{
+padding:10px 8px;
+font-size:13px
+}
+
+}
+@media print{
+.bill-number{
+margin-top:0!important;
+margin-bottom:0!important;
+padding-top:0!important;
+padding-bottom:0!important;
+font-size:13px!important;
+font-weight:600!important;
+line-height:1!important
+}
+.qty-btn,.qty-controls,.qty-display{
+display:none!important
+}
+.qty-print{
+color:var(--print-text)!important;
+font-size:10pt!important;
+display:inline-block!important
+}
+.bill-items{
+flex:none!important;
+margin-bottom:0!important;
+padding-bottom:0!important
+}
+#billTable{
+margin-bottom:0!important
+}
+.total-section{
+background:0 0!important;
+border-top:1px solid #000!important;
+margin:0!important;
+padding:0!important
+}
+.total-section>div{
+margin:0!important;
+font-size:11px!important;
+line-height:1.2!important
+}
+
+}
+@media screen and (width<=480px){
+table{
+font-size:13px
+}
+#billTable,#billTable th,#billTable td{
+padding:8px 10px;
+font-size:15px!important
+}
+#billTable td:first-child,#billTable td:nth-child(2),#billTable td:nth-child(3){
+font-size:15px!important;
+font-weight:600!important
+}
+#billTable td:first-child{
+text-align:left
+}
+#billTable td:nth-child(2),#billTable td:nth-child(3){
+text-align:center
+}
+.qty-display,.customer-receipt .item{
+font-size:15px!important;
+font-weight:600!important
+}
+@media print{
+#billTable,#billTable th,#billTable td{
+font-size:12pt!important
+}
+#billTable td:first-child{
+font-size:12.5pt!important
+}
+.qty-display{
+font-size:13pt!important
+}
+.customer-receipt .item{
+font-size:12pt!important
+}
+
+}
+.qty-btn{
+width:22px;
+height:22px;
+font-size:13px
+}
+.qty-display{
+min-width:22px;
+font-size:12px
+}
+
+}
+
+.page-shell{
+flex-direction:column;
+min-height:100vh;
+display:flex
+}
+.header{
+text-align:center;
+border-bottom:3px solid var(--gold-dark);
+background:linear-gradient(135deg, var(--header-grad-a) 0%, var(--header-grad-b) 100%);
+padding:16px 20px;
+box-shadow:0 4px 20px #00000080
+}
+.header h1{
+color:var(--gold);
+text-shadow:2px 2px 8px var(--hover-glow);
+letter-spacing:1px;
+margin:0;
+font-size:30px
+}
+.header h3{
+color:var(--muted);
+margin:4px 0 0;
+font-size:13px;
+font-weight:400
+}
+.login-container{
+flex:1;
+justify-content:center;
+align-items:center;
+width:100%;
+max-width:720px;
+margin:0 auto;
+padding:32px 20px 24px;
+display:flex
+}
+.login-box{
+background:linear-gradient(135deg, var(--panel) 0%, var(--card-bg) 100%);
+border:2px solid var(--gold-dark);
+border-radius:12px;
+width:100%;
+max-width:640px;
+padding:48px 48px 32px;
+box-shadow:0 8px 32px var(--shadow)
+}
+.login-header{
+text-align:center;
+margin-bottom:32px
+}
+.login-header h2{
+color:var(--gold);
+text-shadow:2px 2px 8px var(--hover-glow);
+margin:0 0 10px;
+font-size:26px
+}
+.login-header p{
+color:var(--muted);
+margin:0;
+font-size:14px
+}
+.form-group input,.form-group select{
+width:100%;
+color:var(--gold);
+background:#00000080;
+border:2px solid var(--hover-glow);
+border-radius:6px;
+padding:12px 16px;
+font-size:14px;
+transition:all .3s
+}
+.form-group select{
+appearance:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23ffd54f' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+background-position:12px;
+background-repeat:no-repeat;
+padding-left:36px
+}
+.form-group input:focus,.form-group select:focus{
+border-color:var(--gold);
+background:#000000b3;
+outline:none;
+box-shadow:0 0 10px var(--hover-glow)
+}
+.form-group input::placeholder{
+color:var(--text-strong)
+}
+.login-btn{
+background:var(--primary);
+color:var(--text-strong);
+cursor:pointer;
+border:none;
+border-radius:6px;
+width:100%;
+margin-top:30px;
+padding:14px;
+font-size:16px;
+font-weight:700;
+transition:all .3s;
+box-shadow:0 4px 15px #2e7d324d
+}
+.login-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 20px #2e7d3266
+}
+.login-btn:active{
+transform:translateY(0)
+}
+.login-btn:disabled{
+opacity:.6;
+cursor:not-allowed;
+transform:none
+}
+.password-field{
+position:relative
+}
+.toggle-password{
+color:var(--gold);
+cursor:pointer;
+background:0 0;
+border:none;
+padding:4px 6px;
+font-size:14px;
+line-height:1;
+position:absolute;
+top:50%;
+right:12px;
+transform:translateY(-50%)
+}
+.toggle-password:focus{
+outline:none
+}
+.error-message{
+border-left:4px solid var(--red);
+color:#ff6b6b;
+background:#d32f2f33;
+border-radius:4px;
+margin-bottom:20px;
+padding:12px 16px;
+font-size:14px;
+display:none
+}
+.error-message.show{
+animation:.3s slideIn;
+display:block
+}
+.success-message{
+border-left:4px solid var(--green);
+color:var(--ok);
+background:#4caf5033;
+border-radius:4px;
+margin-bottom:20px;
+padding:12px 16px;
+font-size:14px;
+display:none
+}
+.success-message.show{
+animation:.3s slideIn;
+display:block
+}
+.loading-spinner{
+border:3px solid var(--hover-glow);
+border-top-color:var(--gold);
+vertical-align:middle;
+border-radius:50%;
+width:20px;
+height:20px;
+margin-left:10px;
+animation:.8s linear infinite spin;
+display:none
+}
+.loading-spinner.show{
+display:inline-block
+}
+.login-footer{
+text-align:center;
+color:var(--muted);
+background:linear-gradient(135deg, var(--header-grad-a) 0%, var(--header-grad-c) 100%);
+border-top:2px solid var(--hover-glow);
+width:100%;
+margin-top:18px;
+padding:12px 10px;
+font-size:11px
+}
+.login-footer b{
+color:var(--gold);
+font-weight:700
+}
+@media (width<=700px){
+.header-info{
+flex-direction:column;
+align-items:center;
+gap:6px;
+padding:0 8px
+}
+.location,.owner{
+width:100%;
+margin:0 auto;
+font-size:12px;
+text-align:center!important
+}
+.owner>div{
+text-align:center!important;
+justify-content:center!important;
+margin-top:2px!important
+}
+
+}
+@media (width<=480px){
+.header-info{
+gap:3px;
+padding:0 2px
+}
+.location,.owner{
+font-size:11px
+}
+
+}
+@media (width<=768px){
+.header-icons{
+min-width:auto
+}
+
+}
+main.container{
+flex:1;
+gap:8px;
+min-height:0;
+padding:8px;
+overflow:hidden
+}
+@media (width<=768px){
+main.container{
+gap:6px;
+padding:6px
+}
+
+}
+@media (width<=600px){
+main.container{
+flex-direction:column;
+gap:4px;
+padding:4px
+}
+
+}
+.page-footer{
+flex-shrink:0
+}
+.header-info{
+flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+gap:12px;
+max-width:800px;
+margin:6px auto 0;
+padding:0 20px;
+font-size:1.0625em;
+display:flex
+}
+@media (width<=600px){
+.bill{
+min-height:60vh;
+max-height:80vh;
+position:relative;
+overflow-y:auto;
+padding-bottom:40px!important
+}
+.actions{
+width:100%;
+box-shadow:none;
+z-index:1;
+background:0 0;
+border-radius:0;
+flex-wrap:wrap;
+justify-content:space-between;
+gap:8px;
+min-height:56px;
+margin-bottom:32px;
+padding-bottom:8px;
+display:flex;
+position:static
+}
+.actions button{
+word-break:break-word;
+flex:1 1 0;
+min-width:0;
+margin-bottom:8px;
+padding:12px 0;
+font-size:15px
+}
+.footer{
+z-index:2;
+background:#fff;
+padding-bottom:12px;
+position:relative
+}
+
+}
+.tabs button{
+white-space:nowrap;
+text-overflow:ellipsis;
+vertical-align:middle;
+color:var(--accent-contrast);
+cursor:pointer;
+background:var(--accent);
+border:none;
+border-radius:16px;
+min-width:80px;
+max-width:160px;
+margin:8px 8px 0 0;
+padding:12px 24px;
+font-size:18px;
+font-weight:600;
+transition:background .2s,color .2s;
+display:inline-block;
+overflow:hidden;
+box-shadow:0 2px 8px #00000014
+}
+.tabs button.active{
+color:var(--accent-contrast);
+background:#ffd54f
+}
+@media (width<=600px){
+.tabs button{
+max-width:90vw;
+padding:10px 8px;
+font-size:15px
+}
+
+}
+@media (width<=900px){
+.header-top-row{
+flex-direction:row;
+justify-content:space-between;
+align-items:flex-start;
+gap:8px
+}
+.header-icons{
+justify-content:flex-end;
+width:100%;
+margin-bottom:0;
+display:flex
+}
+
+}
+@media (width<=600px){
+.header-top-row{
+flex-direction:row;
+justify-content:flex-end;
+align-items:flex-start;
+gap:4px;
+padding:0 4px
+}
+.header-icons{
+justify-content:flex-end;
+width:100%;
+margin-bottom:0;
+display:flex
+}
+.header-info{
+width:100%;
+padding:0 2px
+}
+@media (width<=600px){
+.header-info{
+text-align:center!important;
+justify-content:center!important;
+align-items:center!important
+}
+.location,.owner{
+width:100%;
+margin:0 auto 2px;
+padding:0;
+text-align:center!important;
+justify-content:center!important;
+align-items:center!important
+}
+.owner>div{
+width:100%;
+margin:0 auto 2px;
+padding:0;
+text-align:center!important;
+justify-content:center!important
+}
+
+}
+
+}
+@media (width<=1024px){
+.container{
+flex-direction:column;
+gap:10px;
+padding:8px
+}
+.left,.bill{
+border-radius:12px;
+width:100%;
+min-width:0;
+max-width:100%;
+margin-bottom:10px
+}
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:10px;
+padding:10px
+}
+
+}
+@media (width<=768px){
+.container{
+flex-direction:column;
+gap:6px;
+padding:6px
+}
+.left,.bill{
+border-radius:10px;
+width:100%;
+min-width:0;
+max-width:100%;
+margin-bottom:8px
+}
+.menu{
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+padding:8px
+}
+.tabs{
+flex-wrap:wrap;
+gap:4px;
+padding:6px
+}
+.tabs button{
+min-width:80px;
+padding:8px 6px;
+font-size:12px
+}
+.menu-item{
+min-height:80px;
+padding:12px 8px
+}
+.item-name,.item-price{
+white-space:nowrap;
+text-overflow:ellipsis;
+max-width:120px;
+font-size:12px;
+overflow:hidden
+}
+.bill-header b{
+font-size:16px
+}
+.bill-subtitle{
+font-size:12px
+}
+.datetime{
+font-size:10px
+}
+.actions button{
+padding:8px;
+font-size:13px
+}
+.add-custom-btn{
+width:50px;
+height:50px;
+font-size:28px;
+bottom:5px;
+right:10px
+}
+.footer,.page-footer{
+margin-top:0!important;
+padding-top:2px!important;
+padding-bottom:2px!important
+}
+.modal-content{
+width:95%;
+padding:20px
+}
+.modal-header h2{
+font-size:18px
+}
+
+}
+@media (width<=480px){
+.header{
+padding:12px 8px
+}
+.header h1{
+padding:0 4px;
+font-size:16px
+}
+.header h3{
+padding:0 4px;
+font-size:11px
+}
+.header-info{
+gap:2px;
+padding:0 2px;
+font-size:10px
+}
+.location,.owner{
+flex-direction:column;
+align-items:flex-start;
+gap:1px;
+font-size:10px
+}
+.bill{
+max-height:65vh;
+padding:8px;
+overflow-y:auto
+}
+.bill-items{
+max-height:35vh
+}
+.footer{
+margin-top:2px;
+padding-top:2px;
+font-size:9px
+}
+
+}
+@media (width<=900px){
+.header-top-row{
+flex-direction:column;
+align-items:stretch;
+gap:10px;
+padding:0 8px
+}
+.header-icons{
+justify-content:flex-start;
+margin-bottom:8px
+}
+.header-info{
+flex-direction:column;
+align-items:flex-start;
+gap:6px;
+padding:0 8px
+}
+.owner{
+margin-top:8px;
+text-align:left!important;
+padding-right:0!important
+}
+
+}
+@media (width<=600px){
+.header h1{
+text-align:center;
+flex-wrap:wrap;
+padding:0 10px;
+font-size:18px
+}
+.header h3{
+text-align:center;
+padding:0 10px;
+font-size:13px
+}
+.header-info{
+gap:4px;
+padding:0 4px;
+font-size:11px
+}
+.location,.owner{
+flex-direction:column;
+align-items:flex-start;
+gap:2px;
+font-size:11px
+}
+.header-icons{
+min-width:0;
+margin-bottom:6px
+}
+
+}
+
+@media (width<=500px){
+.tabs{
+gap:6px;
+padding:6px 2px
+}
+.tabs button{
+min-width:120px;
+padding:8px 6px;
+font-size:clamp(10px,2vw,12px)
+}
+
+}
+.header{
+text-align:center;
+border-bottom:3px solid var(--gold-dark);
+background:linear-gradient(135deg, var(--header-grad-a) 0%, var(--header-grad-b) 100%);
+flex-shrink:0;
+min-height:90px;
+padding:16px 20px 12px;
+position:relative;
+box-shadow:0 4px 20px #00000080
+}
+.header h1{
+color:var(--gold);
+text-shadow:2px 2px 8px var(--hover-glow);
+letter-spacing:clamp(.5px,.15vw,1px);
+margin:0;
+padding:0 140px;
+font-size:clamp(18px,3.5vw,32px);
+line-height:1.2
+}
+.header h3{
+color:var(--muted);
+margin:6px 0 0;
+padding:0 140px;
+font-size:clamp(12px,1.9vw,15px);
+font-weight:400;
+line-height:1.3
+}
+@media (width<=900px){
+.header h1{
+padding:0 110px;
+font-size:clamp(16px,4vw,28px)
+}
+.header h3{
+padding:0 110px
+}
+
+}
+@media (width<=600px){
+.header{
+min-height:80px;
+padding:12px 10px 10px
+}
+.header h1{
+padding:0 85px
+}
+.header h3{
+margin:4px 0 0;
+padding:0 85px
+}
+
+}
+.header-info{
+flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+gap:12px;
+max-width:800px;
+margin:6px auto 0;
+padding:0 20px;
+display:flex
+}
+.location,.owner{
+color:var(--muted);
+font-size:clamp(11px,1.5vw,13px)
+}
+.location strong,.owner strong{
+color:var(--gold);
+font-weight:600
+}
+.header-top-row{
+flex-wrap:wrap;
+justify-content:space-between;
+align-items:center;
+gap:8px;
+width:100%;
+padding:0 20px;
+display:flex
+}
+.header-icons{
+flex-wrap:wrap;
+flex:1;
+justify-content:flex-start;
+align-items:center;
+gap:6px;
+min-width:180px;
+display:flex;
+position:static
+}
+@media (width<=900px){
+.header-icons{
+gap:5px
+}
+.header-top-row{
+gap:6px;
+padding:0 12px
+}
+
+}
+@media (width<=768px){
+.header-top-row{
+gap:6px;
+padding:0 10px
+}
+.header-icons{
+min-width:auto
+}
+
+}
+@media (width<=600px){
+.header-top-row{
+gap:4px;
+padding:0 8px
+}
+.header-icons{
+gap:4px
+}
+
+}
+.container{
+flex:1;
+gap:8px;
+min-height:0;
+padding:8px;
+display:flex;
+overflow:visible
+}
+@media (width<=768px){
+.container{
+gap:6px;
+padding:6px
+}
+
+}
+@media (width<=600px){
+.container{
+flex-direction:column;
+gap:4px;
+padding:4px
+}
+
+}
+.left{
+background:var(--panel);
+border:1px solid var(--hover-glow);
+border-radius:16px;
+flex-direction:column;
+width:65%;
+min-width:0;
+height:auto;
+min-height:0;
+display:flex;
+overflow:visible;
+box-shadow:0 8px 32px #0006
+}
+@media (width<=768px){
+.left{
+width:60%
+}
+
+}
+@media (width<=600px){
+.left{
+border-radius:12px;
+width:100%;
+height:auto;
+max-height:60vh
+}
+
+}
+.tabs{
+background:var(--scroll-track);
+border-radius:16px 16px 0 0;
+flex-wrap:wrap;
+flex-shrink:0;
+gap:10px;
+padding:16px;
+display:flex
+}
+.tabs button{
+background:var(--accent);
+color:var(--accent-contrast);
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select:none;
+user-select:none;
+white-space:nowrap;
+text-overflow:ellipsis;
+text-transform:capitalize;
+border:none;
+border-radius:10px;
+flex:1;
+min-width:120px;
+min-height:50px;
+padding:18px 16px;
+font-size:clamp(13px,3vw,17px);
+font-weight:600;
+transition:all .3s;
+box-shadow:0 4px 12px #d4a0174d
+}
+.tabs button:active{
+transform:scale(.97)
+}
+.tabs button:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 16px #d4a01780
+}
+.tabs button.active{
+background:linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+color:var(--accent-contrast);
+transform:translateY(-2px);
+box-shadow:0 6px 20px #ffb30080
+}
+@media (width<=1024px){
+.tabs{
+gap:8px;
+padding:14px
+}
+.tabs button{
+min-width:110px;
+padding:14px 12px;
+font-size:clamp(12px,2.8vw,15px)
+}
+
+}
+@media (width<=768px){
+.tabs{
+gap:6px;
+padding:12px
+}
+.tabs button{
+min-width:100px;
+min-height:44px;
+padding:12px 10px;
+font-size:clamp(11px,2.5vw,14px)
+}
+
+}
+@media (width<=600px){
+.tabs{
+gap:4px;
+padding:10px
+}
+.tabs button{
+flex:1;
+min-width:80px;
+min-height:42px;
+padding:10px 8px;
+font-size:clamp(10px,2.3vw,13px)
+}
+
+}
+.menu{
+flex:1;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+align-content:start;
+gap:16px;
+height:auto;
+min-height:0;
+padding:16px;
+display:grid;
+overflow:visible
+}
+.menu::-webkit-scrollbar{
+width:8px
+}
+.menu::-webkit-scrollbar-track{
+background:#0003;
+border-radius:10px
+}
+.menu::-webkit-scrollbar-thumb{
+background:var(--gold-dark);
+border-radius:10px
+}
+@media (width<=1024px){
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:14px;
+padding:14px
+}
+
+}
+@media (width<=768px){
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:12px;
+padding:12px
+}
+
+}
+@media (width<=600px){
+.menu{
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:10px
+}
+
+}
+.menu-item{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select:none;
+user-select:none;
+background-position:50%;
+background-repeat:no-repeat;
+background-size:cover;
+border:2px solid #0000;
+border-radius:12px;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+min-height:100px;
+padding:24px 20px;
+transition:all .3s;
+display:flex;
+position:relative;
+overflow:hidden;
+box-shadow:0 4px 12px var(--shadow)
+}
+@media (width<=768px){
+.menu-item{
+min-height:90px;
+padding:18px 16px
+}
+
+}
+@media (width<=600px){
+.menu-item{
+min-height:80px;
+padding:14px 12px
+}
+
+}
+.menu-item:before{
+content:"";
+z-index:0;
+background:linear-gradient(135deg,#2a2a2aa6 0%,#333333a6 100%);
+transition:all .3s;
+position:absolute;
+inset:0
+}
+.menu-item:hover:before{
+background:linear-gradient(135deg,#2a2a2a66 0%,#3336 100%)
+}
+.menu-item:active{
+transform:scale(.97)
+}
+.menu-item:hover{
+border-color:var(--gold);
+transform:translateY(-4px);
+box-shadow:0 8px 24px var(--hover-glow)
+}
+.item-name{
+color:var(--gold);
+text-align:center;
+z-index:1;
+text-shadow:1px 1px 3px #000c;
+margin-bottom:8px;
+font-size:14px;
+font-weight:600;
+position:relative
+}
+.item-price{
+color:var(--gold-dark);
+z-index:1;
+text-shadow:1px 1px 3px #000c;
+font-size:18px;
+font-weight:700;
+position:relative
+}
+@media (width<=768px){
+.item-name{
+margin-bottom:6px;
+font-size:clamp(12px,2vw,13px)
+}
+.item-price{
+font-size:clamp(15px,2.5vw,16px)
+}
+
+}
+@media (width<=600px){
+.item-name{
+margin-bottom:4px;
+font-size:clamp(11px,1.8vw,12px)
+}
+.item-price{
+font-size:clamp(13px,2.2vw,14px)
+}
+
+}
+.bill .cut-line{
+display:none
+}
+.bill{
+color:var(--ink);
+border:2px solid var(--gold-dark);
+background:linear-gradient(#fff 0%,var(--paper) 100%);
+border-radius:12px;
+flex-direction:column;
+width:35%;
+min-width:0;
+height:auto;
+min-height:0;
+padding:10px;
+display:flex;
+overflow-y:auto;
+box-shadow:0 8px 32px #00000080
+}
+@media (width<=768px){
+.bill{
+width:40%;
+padding:8px
+}
+
+}
+@media (width<=600px){
+.bill{
+border-radius:10px;
+width:100%;
+height:auto;
+max-height:35vh;
+padding:8px
+}
+
+}
+.bill-header{
+text-align:center;
+border-bottom:1px dashed var(--line-strong);
+flex-shrink:0;
+margin-bottom:8px;
+padding-bottom:6px;
+position:relative
+}
+.bill-header b{
+color:var(--ink);
+font-size:15px
+}
+.bill-subtitle{
+color:var(--muted);
+margin-top:2px;
+font-size:12px
+}
+.bill-number{
+text-align:right;
+color:var(--ink);
+justify-content:flex-end;
+align-items:center;
+gap:4px;
+margin-bottom:4px;
+font-size:11px;
+font-weight:700;
+display:flex
+}
+.bill-no-display{
+display:inline
+}
+.datetime{
+color:var(--muted);
+justify-content:space-between;
+margin-top:4px;
+font-size:10px;
+font-weight:500;
+display:flex
+}
+.bill-items{
+flex:1;
+height:auto;
+min-height:80px;
+margin-bottom:6px;
+overflow:visible
+}
+.bill-items::-webkit-scrollbar{
+width:6px
+}
+.bill-items::-webkit-scrollbar-track{
+background:var(--paper);
+border-radius:10px
+}
+.bill-items::-webkit-scrollbar-thumb{
+background:var(--gold-dark);
+border-radius:10px
+}
+table{
+border-collapse:collapse;
+width:100%;
+margin-bottom:0;
+font-size:15px
+}
+th{
+color:var(--text-strong);
+z-index:1;
+background:linear-gradient(135deg,var(--panel-2) 0%,var(--panel-2) 100%);
+padding:10px 8px;
+font-size:13px;
+font-weight:600;
+position:sticky;
+top:0
+}
+td{
+text-align:center;
+border-bottom:1px solid var(--line-strong);
+padding:10px 8px
+}
+td qty-cell{
+padding:2px
+}
+#billTable,#billTable th,#billTable td{
+padding:8px 10px;
+font-size:15px!important
+}
+#billTable td:first-child,#billTable td:nth-child(2),#billTable td:nth-child(3){
+font-size:15px!important;
+font-weight:600!important
+}
+#billTable td:first-child{
+text-align:left
+}
+#billTable td:nth-child(2),#billTable td:nth-child(3){
+text-align:center
+}
+qty-display,.customer-receipt .item{
+font-size:15px!important;
+font-weight:600!important
+}
+@media print{
+#billTable,#billTable th,#billTable td{
+font-size:9.5pt!important
+}
+#billTable td:first-child{
+font-size:10pt!important
+}
+.qty-display{
+font-size:9.5pt!important
+}
+.customer-receipt .item{
+font-size:9.5pt!important
+}
+
+}
+qty-controls{
+justify-content:center;
+align-items:center;
+gap:2px;
+display:flex
+}
+qty-btn{
+background:var(--gold-dark);
+color:var(--ink);
+cursor:pointer;
+border:none;
+border-radius:4px;
+justify-content:center;
+align-items:center;
+width:32px;
+height:32px;
+font-size:16px;
+font-weight:700;
+transition:all .2s;
+display:flex
+}
+qty-btn:hover{
+background:var(--gold);
+transform:scale(1.1)
+}
+qty-btn:active{
+transform:scale(.95)
+}
+qty-display{
+min-width:20px;
+font-size:15px;
+font-weight:600
+}
+td.remove-cell{
+width:32px;
+padding:2px
+}
+.remove-btn{
+background:var(--red);
+color:var(--text-strong);
+cursor:pointer;
+border:none;
+border-radius:4px;
+min-height:32px;
+padding:5px 10px;
+font-size:12px;
+font-weight:600;
+transition:all .2s
+}
+.remove-btn:hover{
+background:var(--danger);
+transform:scale(1.05)
+}
+tr:hover{
+background:var(--hover-glow)
+}
+.add-custom-btn{
+background:linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+color:var(--accent-contrast);
+cursor:pointer;
+z-index:1000;
+border:none;
+border-radius:50%;
+justify-content:center;
+align-items:center;
+width:70px;
+height:70px;
+font-size:36px;
+font-weight:700;
+transition:all .3s;
+display:flex;
+position:fixed;
+bottom:20px;
+right:20px;
+box-shadow:0 4px 20px #ffb30099
+}
+.add-custom-btn:hover{
+transform:scale(1.1);
+box-shadow:0 6px 28px #ffb300cc
+}
+.add-custom-btn:active{
+transform:scale(.95)
+}
+.modal{
+z-index:2000;
+-webkit-backdrop-filter:blur(4px);
+backdrop-filter:blur(4px);
+background:#000000b3;
+justify-content:center;
+align-items:center;
+width:100%;
+height:100%;
+display:none;
+position:fixed;
+top:0;
+left:0
+}
+.modal.active{
+display:flex
+}
+.modal-content{
+-ms-overflow-style:none;
+scrollbar-width:none;
+background:var(--modal-bg);
+color:var(--modal-ink);
+border-radius:16px;
+width:90%;
+max-width:400px;
+max-height:92vh;
+padding:24px;
+animation:.3s modalSlideIn;
+overflow-y:auto;
+box-shadow:0 10px 40px #00000080
+}
+.modal-content::-webkit-scrollbar{
+display:none
+}
+.modal-header{
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+display:flex
+}
+.modal-header h2{
+color:var(--modal-ink);
+margin:0;
+font-size:22px
+}
+.modal-close{
+cursor:pointer;
+color:var(--muted);
+background:0 0;
+border:none;
+border-radius:50%;
+justify-content:center;
+align-items:center;
+width:32px;
+height:32px;
+font-size:28px;
+transition:all .2s;
+display:flex
+}
+.modal-close:hover{
+color:var(--accent-contrast);
+background:var(--paper)
+}
+.form-group{
+margin-bottom:16px
+}
+.form-group label{
+color:var(--text-soft);
+margin-bottom:6px;
+font-size:14px;
+font-weight:600;
+display:block
+}
+.form-group input{
+border:2px solid var(--line-strong);
+border-radius:8px;
+width:100%;
+padding:10px 12px;
+font-size:15px;
+transition:all .2s
+}
+.form-group input:focus{
+border-color:var(--gold-dark);
+outline:none;
+box-shadow:0 0 0 3px #ffb3001a
+}
+.form-group select{
+color:var(--ink);
+cursor:pointer;
+background-color:var(--paper);
+border:2px solid var(--warn);
+border-radius:8px;
+width:100%;
+padding:10px 12px;
+font-size:15px;
+transition:all .2s
+}
+.form-group select:focus{
+border-color:var(--gold-dark);
+outline:none;
+box-shadow:0 0 0 3px #ffb3001a
+}
+.form-group select option{
+color:var(--ink);
+background-color:var(--paper);
+padding:8px
+}
+.modal-actions{
+gap:10px;
+margin-top:20px;
+display:flex
+}
+.modal-actions button{
+cursor:pointer;
+border:none;
+border-radius:8px;
+flex:1;
+padding:12px;
+font-size:15px;
+font-weight:600;
+transition:all .2s
+}
+.btn-add{
+background:linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+color:var(--accent-contrast)
+}
+.btn-add:hover{
+transform:translateY(-2px);
+box-shadow:0 4px 12px #ffb30066
+}
+.btn-cancel{
+color:var(--text-soft);
+background:var(--paper-2)
+}
+.btn-cancel:hover{
+background:var(--paper-2)
+}
+.size-name{
+font-size:16px;
+font-weight:700
+}
+.size-price{
+font-size:18px;
+font-weight:700
+}
+.total-section{
+color:var(--gold);
+background:linear-gradient(135deg, var(--header-grad-b) 0%, var(--panel-2) 100%);
+border-radius:8px;
+flex-shrink:0;
+margin-top:0;
+margin-bottom:6px;
+padding:8px 10px
+}
+.total{
+text-align:right;
+font-size:20px;
+font-weight:700
+}
+.footer{
+text-align:center;
+color:var(--muted);
+border-top:1px dashed var(--line-strong);
+flex-shrink:0;
+margin-top:4px;
+padding-top:4px;
+font-size:10px
+}
+.footer b{
+font-weight:700
+}
+.actions{
+flex-shrink:0;
+gap:8px;
+display:flex
+}
+.actions button{
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select:none;
+user-select:none;
+border:none;
+border-radius:8px;
+flex:1;
+min-height:44px;
+padding:10px;
+font-size:14px;
+font-weight:700;
+transition:all .3s
+}
+.actions button:active{
+transform:scale(.97)
+}
+.print{
+background:linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+color:var(--accent-contrast);
+box-shadow:0 4px 12px #ffb30066
+}
+.print:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 16px #ffb30099
+}
+.clear{
+background:linear-gradient(135deg, #c62828 0%, var(--red) 100%);
+color:var(--text-strong);
+box-shadow:0 4px 12px #d32f2f66
+}
+.clear:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 16px #d32f2f99
+}
+.empty-bill{
+text-align:center;
+color:var(--muted);
+padding:40px 20px;
+font-style:italic
+}
+/* 70 mm thermal roll: no browser margins, no A4 scaling. Top-level @page —
+   Chromium ignores @page nested inside @media print. */
+@page{
+size:70mm;
+margin:0
+}
+
+@media print{
+html,body{
+height:auto;
+margin:0;
+padding:0;
+overflow:visible;
+color:#000!important;
+background:#fff!important;
+-webkit-print-color-adjust:exact;
+print-color-adjust:exact
+}
+/* Thermal printers are monochrome; never rasterise colour gradients or
+   emoji into grey dither patterns. */
+*{
+margin:0;
+padding:0;
+background-image:none!important;
+box-shadow:none!important;
+text-shadow:none!important
+}
+.left,.actions,.header,.add-custom-btn,.modal,.page-footer,.bill .cut-line,.customer-receipt .cut-line,.remove-btn,.remove-cell,th:last-child,qty-btn{
+display:none!important
+}
+qty-controls{
+display:inline!important
+}
+qty-display{
+font-size:9px!important
+}
+.bill,.bill *,.customer-receipt,.customer-receipt *{
+box-shadow:none!important;
+text-shadow:none!important;
+color:#000!important;
+background:0 0!important
+}
+/* Emojis dither into grey blobs on a thermal head - keep the footer text
+   only. The spans exist so the screen can show them. */
+.bill,.customer-receipt{
+box-sizing:border-box!important;
+background:#fff!important;
+width:70mm!important;
+min-width:70mm!important;
+max-width:70mm!important;
+margin-left:auto!important;
+margin-right:auto!important;
+padding:3mm!important
+}
+.bill{
+page-break-after:always!important;
+page-break-inside:avoid!important;
+border:none!important;
+font-size:10.5pt!important;
+overflow:visible!important
+}
+.bill:after{
+content:"";
+height:2px;
+display:block
+}
+.bill-header{
+border:none!important;
+margin-bottom:1px!important;
+padding-bottom:1px!important
+}
+.bill-header b{
+margin:0!important;
+font-size:13px!important;
+line-height:1.25!important;
+letter-spacing:.2px!important
+}
+.bill-subtitle{
+margin-top:1px!important;
+font-size:9.5px!important;
+line-height:1.25!important
+}
+.bill-number{
+margin-bottom:0!important;
+font-size:9px!important;
+line-height:1.2!important;
+display:block!important
+}
+.bill-number:after{
+content:none
+}
+.bill-no-display{
+display:inline!important
+}
+.datetime{
+margin-top:1px!important;
+font-size:9px!important;
+line-height:1.2!important
+}
+.bill-items{
+flex:none!important;
+margin-bottom:1px!important
+}
+table{
+border-collapse:collapse;
+background:0 0!important;
+margin:0!important
+}
+th{
+background:0 0!important;
+border-bottom:1px solid #000!important;
+padding:2px 3px!important;
+font-size:11px!important;
+font-weight:700!important;
+line-height:1.2!important
+}
+td{
+background:0 0!important;
+border:none!important;
+padding:2px 3px!important;
+font-size:11px!important;
+line-height:1.2!important
+}
+.total-section{
+background:0 0!important;
+border-top:1px solid #000!important;
+margin:4px 0!important;
+padding:2px 0!important
+}
+.total{
+margin:0!important;
+font-size:13pt!important;
+font-weight:700!important;
+line-height:1.3!important
+}
+.footer{
+margin-top:3px!important;
+padding-top:2px!important;
+font-size:9.5px!important;
+line-height:1.3!important;
+text-align:center!important
+}
+.customer-receipt{
+color:#000!important;
+page-break-before:always!important;
+page-break-inside:avoid!important;
+background:#fff!important;
+font-size:12px!important;
+display:block!important
+}
+.customer-receipt .bill-header{
+border-bottom:1px dashed #000!important;
+margin-bottom:1px!important;
+padding-bottom:1px!important
+}
+.customer-receipt .bill-header b{
+font-size:12px!important;
+line-height:1.2!important
+}
+.customer-receipt .bill-subtitle{
+margin-top:0!important;
+font-size:9px!important;
+line-height:1.2!important
+}
+.customer-receipt .datetime{
+margin-top:1px!important;
+font-size:9px!important;
+line-height:1.2!important
+}
+.customer-receipt .customer-items{
+margin-top:0!important;
+margin-bottom:1px!important
+}
+.customer-receipt .customer-items .item{
+border-bottom:1px dashed #000!important;
+padding:2px 0!important;
+font-size:9px!important;
+font-weight:500!important;
+line-height:1.2!important
+}
+.customer-receipt .footer{
+margin-top:2px!important;
+padding-top:2px!important;
+font-size:9px!important;
+line-height:1.2!important
+}
+
+}
+@media screen and (width<=1024px){
+.header h1{
+font-size:28px
+}
+.left{
+width:60%
+}
+.bill{
+width:40%
+}
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr))
+}
+
+}
+@media screen and (width<=768px){
+.header h1{
+font-size:24px
+}
+.header h3{
+font-size:14px
+}
+.header-info{
+flex-direction:column;
+gap:4px
+}
+.location,.owner{
+font-size:12px
+}
+.container{
+flex-direction:column
+}
+.left{
+flex:1;
+width:100%;
+min-height:200px
+}
+.bill{
+flex:1;
+width:100%;
+min-height:280px
+}
+.tabs{
+gap:6px;
+padding:8px
+}
+.tabs button{
+padding:10px 8px;
+font-size:13px
+}
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+gap:8px
+}
+.menu-item{
+min-height:90px;
+padding:16px 12px
+}
+.item-name{
+font-size:13px
+}
+.item-price{
+font-size:16px
+}
+
+}
+@media screen and (width<=480px){
+.header{
+padding:12px 8px
+}
+.header h1{
+font-size:20px
+}
+.header h3{
+font-size:12px
+}
+.header-info{
+padding:0 10px;
+font-size:10px
+}
+.container{
+gap:8px;
+padding:8px
+}
+.left{
+height:45vh;
+min-height:350px
+}
+.bill{
+max-height:65vh;
+padding:12px;
+overflow-y:auto
+}
+.bill-items{
+max-height:35vh
+}
+.tabs{
+flex-wrap:wrap;
+gap:4px;
+padding:6px
+}
+.tabs button{
+min-width:80px;
+padding:8px 6px;
+font-size:12px
+}
+.menu{
+grid-template-columns:repeat(2,1fr);
+gap:6px;
+padding:8px
+}
+.menu-item{
+min-height:80px;
+padding:12px 8px
+}
+.item-name{
+font-size:12px
+}
+.item-price{
+font-size:14px
+}
+.bill-header b{
+font-size:16px
+}
+.bill-subtitle{
+font-size:12px
+}
+.datetime{
+font-size:10px
+}
+table{
+font-size:11px
+}
+th,td{
+padding:6px 4px
+}
+th:last-child,.remove-cell{
+width:35px;
+padding:4px 2px
+}
+qty-btn{
+width:22px;
+height:22px;
+font-size:13px
+}
+qty-display{
+min-width:22px;
+font-size:12px
+}
+.remove-btn{
+padding:3px 6px;
+font-size:10px
+}
+.total{
+font-size:18px
+}
+.actions button{
+padding:8px;
+font-size:13px
+}
+.add-custom-btn{
+width:50px;
+height:50px;
+font-size:28px;
+bottom:15px;
+right:15px
+}
+.modal-content{
+width:95%;
+padding:20px
+}
+.modal-header h2{
+font-size:18px
+}
+
+}
+@media screen and (width>=1440px){
+.container{
+max-width:1400px;
+margin:0 auto
+}
+.header h1{
+font-size:36px
+}
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr))
+}
+
+}
+@media screen and (width>=1920px){
+.container{
+max-width:1600px
+}
+
+}
+.customer-receipt{
+color:var(--ink);
+background:#fff;
+display:none
+}
+.customer-items{
+margin-top:12px
+}
+.customer-items .item{
+border-bottom:1px dashed var(--line-strong);
+padding:6px 0;
+font-size:13px;
+font-weight:500
+}
+@media (width<=768px){
+body{
+zoom:1!important
+}
+.container{
+min-height:auto;
+overflow:visible!important
+}
+.left{
+width:100%!important;
+height:auto!important;
+min-height:40vh!important;
+max-height:none!important
+}
+.bill{
+width:100%!important;
+height:auto!important;
+max-height:none!important;
+overflow-y:auto!important
+}
+.bill-items{
+min-height:170px!important;
+max-height:42vh!important;
+overflow:auto!important
+}
+.actions{
+flex-wrap:wrap;
+gap:8px;
+display:flex
+}
+.actions button{
+flex:48%;
+min-width:130px
+}
+.form-group input,.form-group select{
+min-height:44px;
+font-size:16px!important
+}
+.modal{
+padding:12px;
+overflow-y:auto;
+align-items:flex-start!important
+}
+.modal-content{
+width:100%!important;
+max-width:100%!important;
+max-height:none!important;
+margin:8px auto 20px!important;
+padding:16px!important
+}
+
+}
+@media (width<=480px){
+.header-top-row{
+flex-direction:column!important;
+align-items:stretch!important
+}
+.header-icons{
+width:100%;
+justify-content:center!important
+}
+.header h1,.header h3{
+padding:0 6px!important
+}
+.menu{
+grid-template-columns:repeat(2,minmax(0,1fr))!important
+}
+.actions button{
+flex:100%
+}
+.modal-actions{
+flex-direction:column
+}
+
+}
+
+*{
+box-sizing:border-box
+}
+html,body{
+background:linear-gradient(135deg, var(--bg) 0%, var(--panel) 100%);
+min-height:100%;
+color:var(--text);
+margin:0;
+padding:0;
+font-family:var(--font-ui)
+}
+body{
+flex-direction:column;
+min-height:100vh;
+display:flex
+}
+.analytics-content::-webkit-scrollbar{
+width:8px
+}
+.analytics-content::-webkit-scrollbar-track{
+background:#0003;
+border-radius:10px
+}
+.analytics-content::-webkit-scrollbar-thumb{
+background:var(--gold-dark);
+border-radius:10px
+}
+.analytics-content::-webkit-scrollbar-thumb:hover{
+background:var(--gold)
+}
+.analytics-container{
+flex-direction:column;
+flex:1;
+min-height:0;
+padding:8px;
+display:flex
+}
+.analytics-content{
+background:var(--panel);
+border:1px solid var(--hover-glow);
+border-radius:16px;
+flex-direction:column;
+flex:1;
+min-height:0;
+padding:12px;
+display:flex;
+overflow-y:auto;
+box-shadow:0 8px 32px #0006
+}
+.stats-grid{
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:16px;
+margin-bottom:20px;
+display:grid
+}
+.stat-card{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+text-align:center;
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select:none;
+user-select:none;
+border:2px solid #0000;
+border-radius:12px;
+padding:24px 16px;
+transition:all .3s;
+box-shadow:0 4px 12px var(--shadow)
+}
+.stat-card:hover{
+border-color:var(--hover-glow);
+transform:translateY(-2px);
+box-shadow:0 6px 16px #0006
+}
+.stat-label{
+color:var(--muted);
+text-transform:uppercase;
+margin-bottom:8px;
+font-size:14px;
+font-weight:600
+}
+.stat-value{
+color:var(--accent);
+text-shadow:1px 1px 3px #00000080;
+font-size:36px;
+font-weight:700
+}
+.stat-card.total .stat-value{
+color:var(--primary)
+}
+.stat-card.count .stat-value{
+color:var(--accent)
+}
+.charts-grid{
+grid-template-columns:repeat(auto-fit,minmax(400px,1fr));
+gap:20px;
+margin-bottom:20px;
+display:grid
+}
+.chart-container{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+border:1px solid var(--hover-glow);
+border-radius:12px;
+padding:20px;
+box-shadow:0 4px 12px var(--shadow)
+}
+.chart-title{
+color:var(--gold);
+text-align:center;
+margin-bottom:15px;
+font-size:18px;
+font-weight:600
+}
+.chart-canvas{
+max-height:300px;
+position:relative
+}
+.payment-breakdown{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+border:1px solid var(--hover-glow);
+border-radius:12px;
+margin-bottom:20px;
+padding:20px;
+box-shadow:0 4px 12px var(--shadow)
+}
+.payment-breakdown h3{
+color:var(--gold);
+margin-top:0;
+font-size:18px
+}
+.payment-item{
+border-bottom:1px solid var(--hover-glow);
+justify-content:space-between;
+padding:10px 0;
+display:flex
+}
+.payment-item:last-child{
+border-bottom:none
+}
+.payment-method{
+color:var(--muted);
+font-weight:600
+}
+.payment-amount{
+color:var(--gold);
+font-weight:700
+}
+.loading{
+text-align:center;
+color:var(--muted);
+flex:1;
+justify-content:center;
+align-items:center;
+padding:40px;
+font-style:italic;
+display:flex
+}
+.error-message{
+border-left:4px solid var(--red);
+color:#ff6b6b;
+background:#d32f2f33;
+border-radius:4px;
+margin-bottom:20px;
+padding:15px
+}
+.report-section{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+border:1px solid var(--hover-glow);
+border-radius:12px;
+margin-bottom:20px;
+padding:20px;
+box-shadow:0 4px 12px var(--shadow)
+}
+.report-section h3{
+color:var(--gold);
+border-bottom:2px solid var(--gold-dark);
+justify-content:space-between;
+align-items:center;
+margin-top:0;
+margin-bottom:15px;
+padding-bottom:10px;
+font-size:20px;
+display:flex
+}
+.toggle-hidden-btn{
+background:var(--primary);
+color:var(--text-strong);
+cursor:pointer;
+text-transform:uppercase;
+letter-spacing:.3px;
+white-space:nowrap;
+border:none;
+border-radius:6px;
+justify-content:center;
+align-items:center;
+min-height:36px;
+padding:8px 12px;
+font-size:12px;
+font-weight:700;
+transition:all .3s;
+display:flex;
+box-shadow:0 2px 6px #2e7d324d
+}
+.toggle-hidden-btn:hover{
+background:var(--primary);
+transform:translateY(-1px);
+box-shadow:0 3px 10px #2e7d3266
+}
+.toggle-hidden-btn:disabled{
+cursor:not-allowed;
+opacity:.5;
+box-shadow:none;
+background:linear-gradient(135deg, var(--line-strong) 0%, var(--panel-2) 100%);
+transform:none
+}
+.toggle-hidden-btn.active{
+background:var(--accent);
+box-shadow:0 2px 6px #d4a0174d
+}
+.report-table{
+border-collapse:collapse;
+width:100%;
+font-size:15px
+}
+.report-table thead{
+border-bottom:2px solid var(--gold-dark);
+background:#0006
+}
+.report-table th{
+text-align:left;
+color:var(--gold);
+text-transform:uppercase;
+cursor:pointer;
+-webkit-user-select:none;
+user-select:none;
+border-right:1px solid var(--hover-glow);
+padding:14px 12px;
+font-size:13px;
+font-weight:600
+}
+.report-table th:hover{
+background:var(--hover-glow)
+}
+.report-table th:last-child{
+border-right:none
+}
+.report-table td{
+color:var(--muted);
+border-bottom:1px solid var(--hover-glow);
+padding:12px 14px
+}
+.report-table tbody tr:hover{
+background:var(--hover-glow)
+}
+.amount-cell{
+color:var(--gold);
+text-align:right;
+font-weight:700
+}
+.qty-cell{
+text-align:center;
+color:var(--info);
+font-weight:600
+}
+.event-cell{
+color:var(--warn-strong)
+}
+.bill-no-cell{
+color:var(--ok);
+font-weight:600
+}
+.report-total{
+border-top:2px solid var(--gold-dark);
+color:var(--gold);
+background:var(--scroll-track);
+font-weight:700
+}
+.no-data{
+text-align:center;
+color:var(--muted);
+padding:20px;
+font-style:italic
+}
+.sort-indicator{
+margin-left:5px;
+font-size:10px;
+display:inline-block
+}
+.date-picker-panel{
+background:var(--scroll-track);
+border-bottom:1px solid var(--hover-glow);
+border-radius:12px 12px 0 0;
+flex-direction:column;
+flex-shrink:0;
+align-items:stretch;
+gap:10px;
+padding:12px;
+display:flex
+}
+.date-controls,.range-controls{
+flex-wrap:wrap;
+align-items:center;
+gap:8px;
+display:flex
+}
+.date-btn{
+color:var(--text-strong);
+cursor:pointer;
+text-transform:uppercase;
+letter-spacing:.3px;
+white-space:nowrap;
+-webkit-tap-highlight-color:transparent;
+-webkit-user-select:none;
+user-select:none;
+background:linear-gradient(135deg,#c62828 0%,var(--danger-strong) 100%);
+border:none;
+border-radius:6px;
+align-items:center;
+height:42px;
+padding:12px 20px;
+font-size:13px;
+font-weight:700;
+transition:all .3s;
+display:flex;
+box-shadow:0 2px 8px #d32f2f4d
+}
+.date-btn:hover{
+background:linear-gradient(135deg,var(--danger) 0%,var(--danger) 100%);
+transform:translateY(-2px);
+box-shadow:0 4px 12px #d32f2f66
+}
+.date-btn:active{
+transform:scale(.97)
+}
+.date-btn.active{
+background:linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+color:var(--accent-contrast);
+box-shadow:0 4px 12px var(--hover-glow)
+}
+.calendar-picker-wrapper{
+background:linear-gradient(135deg, var(--header-grad-b) 0%, var(--panel-2) 100%);
+border:1px solid var(--hover-glow);
+border-radius:6px;
+align-items:center;
+gap:0;
+height:36px;
+padding:0;
+display:flex;
+overflow:hidden;
+box-shadow:0 2px 8px var(--shadow)
+}
+.calendar-label{
+color:var(--gold);
+text-transform:uppercase;
+white-space:nowrap;
+letter-spacing:.3px;
+background:var(--scroll-track);
+border-right:1px solid var(--hover-glow);
+align-items:center;
+height:100%;
+padding:0 12px;
+font-size:11px;
+font-weight:700;
+display:flex
+}
+.custom-date-input{
+color:var(--text-strong);
+cursor:pointer;
+background:0 0;
+border:none;
+border-radius:0;
+min-width:130px;
+height:100%;
+padding:0 12px;
+font-family:var(--font-ui);
+font-size:12px;
+font-weight:500;
+transition:all .3s
+}
+.calendar-picker-wrapper:hover{
+border-color:var(--gold-dark);
+box-shadow:0 4px 12px var(--hover-glow)
+}
+.custom-date-input:hover{
+background:#ffffff0d
+}
+.custom-date-input:focus{
+background:#ffffff14;
+outline:none
+}
+.custom-date-input::-webkit-calendar-picker-indicator{
+cursor:pointer;
+filter:invert()brightness(1.2);
+opacity:1;
+width:20px;
+height:20px;
+margin-right:6px;
+padding:4px 6px
+}
+.custom-date-input::-webkit-calendar-picker-indicator:hover{
+opacity:1;
+filter:invert()brightness(1.4);
+transform:scale(1.1)
+}
+.search-panel{
+background:linear-gradient(135deg, var(--card-bg) 0%, var(--panel-2) 100%);
+border:1px solid var(--hover-glow);
+border-radius:12px;
+margin-bottom:20px;
+padding:15px
+}
+.search-input{
+border:1px solid var(--gold-dark);
+width:100%;
+color:var(--gold);
+background:var(--scroll-track);
+border-radius:8px;
+min-height:44px;
+padding:14px 18px;
+font-size:16px
+}
+.search-input::placeholder{
+color:var(--text-strong)
+}
+.search-input:focus{
+outline:none;
+box-shadow:0 0 0 2px var(--hover-glow)
+}
+.page-footer{
+text-align:center;
+color:var(--muted);
+background:linear-gradient(135deg, var(--header-grad-a) 0%, var(--header-grad-c) 100%);
+border-top:2px solid var(--hover-glow);
+flex-shrink:0;
+margin-top:auto;
+padding:12px;
+font-size:13px
+}
+.page-footer b{
+color:var(--gold);
+font-weight:700
+}
+@media (width<=768px){
+body{
+zoom:1
+}
+.analytics-container{
+padding:10px
+}
+.stats-grid{
+grid-template-columns:repeat(2,1fr)
+}
+.charts-grid{
+grid-template-columns:1fr
+}
+.calendar-picker-wrapper{
+width:100%
+}
+.custom-date-input{
+width:100%;
+min-width:0
+}
+.report-section{
+padding:16px;
+overflow-x:auto
+}
+.report-section h3{
+flex-wrap:wrap;
+gap:10px
+}
+.report-table{
+min-width:680px
+}
+
+}
+@media (width<=480px){
+body{
+zoom:1
+}
+.stats-grid{
+grid-template-columns:1fr;
+gap:12px
+}
+.chart-container{
+padding:14px
+}
+.chart-title{
+font-size:16px
+}
+.report-table{
+font-size:13px
+}
+
+}
+@media (width<=768px){
+.container{
+flex-direction:column!important
+}
+.left{
+width:100%!important
+}
+.right{
+margin-top:20px;
+width:100%!important
+}
+.menu{
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important
+}
+
+}
+header.header{
+border-bottom:2.5px solid var(--accent)!important;
+box-sizing:border-box!important;
+background:linear-gradient(135deg, var(--bg) 0%, var(--panel-3) 100%)!important;
+flex-direction:column!important;
+align-items:center!important;
+width:100%!important;
+padding:12px 16px!important;
+display:flex!important;
+box-shadow:0 4px 20px #00000080!important
+}
+header.header .header-top-row{
+flex-flow:row!important;
+justify-content:space-between!important;
+align-items:center!important;
+gap:16px!important;
+width:100%!important;
+max-width:1200px!important;
+margin:0 auto 12px!important;
+padding:0!important;
+display:flex!important;
+position:static!important;
+top:0!important
+}
+header.header .header-icons{
+width:42px!important;
+min-width:unset!important;
+flex:0 0 42px!important;
+justify-content:flex-start!important;
+align-items:center!important;
+margin-top:10px!important;
+display:flex!important
+}
+header.header .billing-portal-heading{
+text-align:center!important;
+flex-direction:column!important;
+flex:2!important;
+justify-content:center!important;
+align-items:center!important;
+display:flex!important
+}
+header.header .billing-portal-heading h1{
+color:var(--accent)!important;
+text-shadow:0 0 10px #a3e63566!important;
+letter-spacing:.5px!important;
+white-space:normal!important;
+margin:0!important;
+padding:0!important;
+font-size:clamp(18px,2.5vw,24px)!important;
+font-weight:700!important
+}
+header.header .billing-portal-heading h3{
+color:var(--muted)!important;
+letter-spacing:.3px!important;
+margin:4px 0 0!important;
+padding:0!important;
+font-size:clamp(11px,1.6vw,13px)!important;
+font-weight:500!important;
+line-height:1.2!important
+}
+header.header .header-portal-subtitle{
+color:var(--accent)!important;
+text-transform:uppercase!important;
+letter-spacing:1px!important;
+margin:4px 0 0!important;
+font-size:clamp(12px,1.8vw,14px)!important;
+font-style:italic!important;
+font-weight:700!important
+}
+header.header .header-info{
+border-top:none!important;
+flex-direction:row!important;
+justify-content:space-between!important;
+align-items:flex-start!important;
+gap:4px!important;
+width:100%!important;
+max-width:1200px!important;
+margin:6px auto 0!important;
+padding:0!important;
+display:flex!important
+}
+header.header .location,header.header .owner{
+color:var(--muted)!important;
+flex:1!important;
+min-width:200px!important;
+font-size:clamp(11px,1.5vw,13px)!important;
+line-height:1.4!important;
+display:block!important
+}
+header.header .location{
+text-align:left!important
+}
+header.header .owner{
+text-align:right!important
+}
+header.header .location strong,header.header .owner strong{
+color:var(--accent)!important;
+margin-right:4px!important;
+font-weight:600!important
+}
+header.header .owner-row{
+width:100%!important;
+display:block!important
+}
+@media (width<=600px){
+header.header{
+padding:8px 10px!important
+}
+header.header .header-top-row{
+align-items:center!important;
+gap:8px!important;
+margin-bottom:4px!important
+}
+
+header.header .billing-portal-heading{
+flex:auto!important;
+min-width:0!important;
+padding:0 4px!important
+}
+header.header .billing-portal-heading h1{
+white-space:nowrap!important;
+font-size:clamp(14px,4vw,18px)!important
+}
+header.header .billing-portal-heading h3,header.header .header-portal-subtitle{
+white-space:nowrap!important;
+font-size:clamp(10px,2.5vw,12px)!important
+}
+header.header .header-icons{
+flex:0 0 36px!important;
+align-self:center!important;
+align-items:center!important;
+width:36px!important;
+max-width:36px!important
+}
+header.header .header-info{
+text-align:center!important;
+border-top:none!important;
+flex-direction:column!important;
+align-items:center!important;
+gap:0!important;
+margin-top:4px!important;
+padding-top:0!important
+}
+header.header .location,header.header .owner{
+text-align:center!important;
+align-items:center!important;
+max-width:100%!important
+}
+header.header .owner{
+margin-top:-4px!important
+}
+header.header .owner-row{
+justify-content:center!important
+}
+
+}
+
+
+/* ===== RESPONSIVE FIXES =====
+ *
+ * One late block so the fixes win over the legacy rules above without
+ * !important wars. The layout is fluid from 360px to 1920px+; the FAB gets a
+ * reserved strip so it never covers the bill total.
+ */
+
+/* The floating "+" button: on desktop it parks over the menu side
+   (bottom-left) so it never covers the bill's total; on stacked layouts it
+   stays bottom-right and the bill reserves clearance for it. */
+@media screen and (width > 900px) {
+  .add-custom-btn {
+    right: auto;
+    left: 20px;
+  }
+}
+/* The floating "+" button overlaps the bill panel only on stacked
+   (<= 900px) layouts, where it sits bottom-right over the receipt.
+   On desktop it parks over the menu side, so the bill needs no
+   clearance - reserving it left a dead band under the thank-you block. */
+.bill {
+  --fab-clearance: 0px;
+  padding-bottom: 24px !important;
+}
+@media screen and (width <= 900px) {
+  body:has(.add-custom-btn) .bill {
+    --fab-clearance: 76px;
+  }
+  .bill {
+    padding-bottom: calc(16px + var(--fab-clearance)) !important;
+  }
+}
+
+/* Fluid type for the pieces the legacy sheet fixed in px. */
+.bill-header b {
+  font-size: var(--fs-md);
+  letter-spacing: 0.01em;
+}
+.bill-subtitle {
+  font-size: var(--fs-xs);
+}
+.bill-fineprint,
+.datetime {
+  font-size: var(--fs-xs);
+}
+.item-name {
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+.item-price {
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+.tabs button {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.total {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.page-footer b,
+.login-footer b {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* Bill panel: readable column width on huge screens instead of a 35% ribbon. */
+@media screen and (width >= 1600px) {
+  .left {
+    width: 68%;
+  }
+  .bill {
+    width: 32%;
+  }
+}
+
+/* Split layout: stack below 900px, with sensible scroll behaviour. */
+@media screen and (width <= 900px) {
+  .container {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .left,
+  .bill {
+    width: 100%;
+    max-height: none;
+  }
+  .left {
+    min-height: 55vh;
+  }
+  .bill {
+    min-height: 40vh;
+    overflow: visible;
+  }
+}
+
+/* Tablets and phones: the menu grid adapts, tap targets stay >= 44px. */
+@media screen and (width <= 768px) {
+  .menu {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .tabs {
+    gap: 8px;
+  }
+  .tabs button {
+    min-height: 44px;
+  }
+  .qty-btn {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .actions button {
+    min-height: 46px;
+  }
+}
+
+/* Phones. */
+@media screen and (width <= 480px) {
+  .menu {
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 8px;
+  }
+  .bill-controls {
+    gap: 8px;
+  }
+  .add-custom-btn {
+    width: 54px;
+    height: 54px;
+    font-size: 26px;
+    bottom: 12px;
+    right: 12px;
+  }
+  .notice-stack {
+    left: 8px;
+    right: 8px;
+    max-width: none;
+  }
+}
+
+/* Very small phones (360px). */
+@media screen and (width <= 380px) {
+  .menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Kitchen board: two columns at tablet width, before kitchen.css drops to one. */
+@media screen and (width <= 1024px) and (width > 900px) {
+  .kitchen-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Analytics: stat cards flow on small screens. */
+@media screen and (width <= 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}
+
+/* Print never inherits UI font sizing tweaks. */
+@media print {
+  .bill,
+  .customer-receipt {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+/* ===== HEADER ON SMALL SCREENS =====
+ *
+ * The legacy sheet carries contradictory <=600px rules for the header: one
+ * hides .header-info entirely and another lets .header-top-row wrap, which
+ * pushed the gear/⋮ buttons onto their own rows. One late block overrides all
+ * of it: the brand sits on its own centred line and the three icon buttons
+ * form a lane beneath the title — settings hugs the left edge, tables and
+ * analytics hug the right. The location/owner line is hidden: counter-screen
+ * information that only eats header space here.
+ */
+@media screen and (width <= 600px) {
+  header.header {
+    padding: 8px 10px 10px !important;
+  }
+  header.header .header-top-row {
+    display: grid !important;
+    grid-template-columns: auto auto !important;
+    grid-template-areas:
+      "title title"
+      "icons actions" !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    column-gap: 8px !important;
+    row-gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 auto 6px !important;
+  }
+  .header-icons {
+    grid-area: icons !important;
+    justify-self: start !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    align-self: auto !important;
+  }
+  .header-icons .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+  .billing-portal-heading {
+    grid-area: title !important;
+    justify-self: center !important;
+    text-align: center !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .billing-portal-heading h1 {
+    font-size: clamp(0.95rem, 4.2vw, 1.15rem) !important;
+    line-height: 1.25 !important;
+    padding: 0 !important;
+    gap: 4px !important;
+  }
+  .billing-portal-heading h3 {
+    font-size: 0.66rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .header-portal-subtitle {
+    font-size: 0.62rem !important;
+  }
+  .header-actions {
+    grid-area: actions !important;
+    justify-self: end !important;
+    flex: 0 0 auto !important;
+  }
+  .header-actions .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Location & owner are for the wall-mounted counter screens; on a phone
+     they just eat header space, so they vanish with the small screen. */
+  header.header .header-info {
+    display: none !important;
+  }
+}
+
+/* ===== MOBILE BILL PANEL: grow with the order =====
+ *
+ * The legacy sheet forced the receipt card to 60vh-65vh on phones while
+ * capping .bill-items at 35-42vh with its own scrollbar, and padded the
+ * action row with an extra 32px margin. A short order therefore left a
+ * large blank band under the buttons, and a long order was squeezed into
+ * a tiny inner scroll window instead of listing every item.
+ *
+ * On stacked layouts the card should simply be as tall as its contents
+ * and let the page scroll. The floating "+" button keeps its clearance
+ * (see the --fab-clearance rules above), so it never covers the buttons.
+ */
+@media screen and (width <= 900px) {
+  .bill {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .bill-items {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .actions {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Desktop / till layout (menu and bill side by side): the card was capped
+   at calc(100vh - 110px) while starting ~140px below the top, so its
+   bottom — the Print/Clear buttons — landed past the viewport, and a long
+   order was squeezed into an inner scroll window. Let the card grow with
+   the order and scroll the page instead, matching the stacked/mobile
+   behaviour above. The container must grow too: it is a flex item pinned
+   to the leftover viewport height, and its overflow:hidden used to clip
+   anything that grew past it. */
+@media screen and (width > 900px) {
+  main.container {
+    min-height: auto;
+    overflow: visible;
+  }
+  .server-layout .bill,
+  .billing-layout .bill {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .server-layout .bill-items,
+  .billing-layout .bill-items {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* ===== BILL PRINT FORMAT (matches the printed reference receipt) =====
+ *
+ * Utility classes the markup can lean on. The legacy sheet hid screen-only
+ * widgets by bare tag name in @media print, so a missing selector silently
+ * leaked the qty steppers and remove buttons onto the printed slip.
+ */
+.no-print {
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Details the cashier picks (table, payment, order type) do not exist on the
+   on-screen card — the controls already show them — but they must appear on
+   the printed slip, laid out exactly like the reference. */
+.bill-print-meta {
+  display: none;
+}
+@media print {
+  /* Reference format: only "Bill No" sits in the header (the main bill only —
+     the customer token slip keeps its Date), the table number prints as its
+     own line under the items. */
+  .bill .bill-header-row .bill-number:first-child {
+    display: none !important;
+  }
+  .bill-print-meta {
+    display: block;
+    padding: 0 0 4px;
+  }
+  .bill-print-meta .print-meta-line {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    margin: 10px 0 0;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #000 !important;
+    background: none !important;
+  }
+}
+
+/* Reference format: the customer's copy prints on a second page as a plain
+   token slip — same header, one line per item ("1 x Chicken Biryani"), a
+   token number instead of a bill number, and no totals. The .customer-receipt
+   styles already exist for it. */
+.customer-receipt {
+  display: none;
+}
+@media print {
+  .customer-receipt {
+    display: block !important;
+    page-break-before: always !important;
+  }
+  .customer-receipt .bill-number {
+    margin-top: 0 !important;
+  }
+}
+
+/* Print leaks found by rendering the slip at the 70 mm page width:
+   - the screen rule `header.header { display: flex !important }` outranks
+     the print hide on `.header`, so the dark page header printed above
+     the bill;
+   - `.page-shell` keeps its dark theme background, and with
+     print-color-adjust: exact it printed as a black fill below the slips
+     and in the bill's rounded corners;
+   - the narrow-screen `.bill-items { min-height: 170px }` also matches the
+     70 mm page, leaving a blank gap under short orders;
+   - the container's 4px padding pushed the 70 mm bill off the right edge. */
+@media print {
+  header.header {
+    display: none !important;
+  }
+  .page-shell,
+  main.container {
+    background: #fff !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+  /* Stack the slips as plain blocks: in a flex row the token slip stretched
+     to the bill's height, which the page-fit measurement then printed as
+     blank paper. */
+  main.container {
+    display: block !important;
+  }
+  .bill,
+  .customer-receipt {
+    border-radius: 0 !important;
+  }
+  .bill .bill-items {
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}
+
+/* ===== REPRINT FROM THE BILL REGISTER =====
+ * ReprintBill mounts a copy of the slip beside the app root only while
+ * printing. It never shows on screen, and while it prints the rest of the
+ * page (the analytics dashboard) is hidden from the printer. */
+@media screen {
+  body > .reprint-root {
+    display: none !important;
+  }
+}
+@media print {
+  body.reprinting > #root {
+    display: none !important;
+  }
+}
+
+/* ===== RECEIPT LOOK (approved reference, 30 Sep 2026) =====
+ * Monospace till-roll style: bold bill number top right, centred name and
+ * tagline, date and time on one line, dashed rules between sections, bold
+ * item rows, compact table/payment/order lines, a large bold total, and a
+ * "Thank you! / Visit again" footer. Both slips share it. */
+@media print {
+  .bill,
+  .customer-receipt {
+    font-family: 'Courier New', Courier, ui-monospace, monospace !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    display: block !important;
+  }
+  .bill *,
+  .customer-receipt * {
+    font-family: inherit !important;
+  }
+
+  /* Header */
+  .bill .bill-header,
+  .customer-receipt .bill-header {
+    text-align: center !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .bill .bill-header-row,
+  .customer-receipt .bill-header-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin: 0 0 3px !important;
+  }
+  .bill .bill-header-row,
+  .customer-receipt .bill-header-row {
+    justify-content: flex-end !important;
+  }
+  .bill .bill-header-row .bill-number,
+  .customer-receipt .bill-header-row .bill-number {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+  }
+  .bill .bill-header b,
+  .customer-receipt .bill-header b {
+    display: inline-block !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    margin: 0 0 2px !important;
+  }
+  .bill .bill-subtitle,
+  .customer-receipt .bill-subtitle {
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+  }
+  .bill .bill-fineprint,
+  .customer-receipt .bill-fineprint {
+    font-size: 10px !important;
+  }
+  .bill .datetime,
+  .customer-receipt .datetime {
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    font-size: 11px !important;
+    margin: 3px 0 0 !important;
+    padding: 0 0 4px !important;
+    border: none !important;
+    border-bottom: 1px dashed #000 !important;
+  }
+
+  /* Items */
+  .bill .bill-items {
+    margin: 4px 0 0 !important;
+  }
+  .bill #billTable {
+    width: 100% !important;
+  }
+  .bill #billTable th {
+    border: none !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 2px 0 4px !important;
+  }
+  .bill #billTable td {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 3px 0 !important;
+    vertical-align: top !important;
+  }
+  .bill #billTable .qty-print {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+  }
+  .bill #billTable th:nth-child(2),
+  .bill #billTable td:nth-child(2) {
+    width: 12% !important;
+    text-align: center !important;
+  }
+  .bill #billTable th:nth-child(3),
+  .bill #billTable td:nth-child(3) {
+    width: 22% !important;
+    text-align: right !important;
+    white-space: nowrap !important;
+  }
+
+  /* Table / payment / order type */
+  .bill .bill-print-meta {
+    padding: 4px 0 4px !important;
+    border-bottom: 1px dashed #000 !important;
+  }
+  .bill .bill-print-meta .print-meta-line {
+    margin: 0 !important;
+    gap: 1ch !important;
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Totals */
+  .bill .total-section {
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 4px 0 !important;
+    border-bottom: 1px dashed #000 !important;
+  }
+  .bill .total-line {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 11px !important;
+    margin: 0 0 2px !important;
+    color: #000 !important;
+  }
+  .bill .total {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    margin: 3px 0 0 !important;
+  }
+
+  /* Footer: dashed rule above, centred thanks + visit again */
+  .bill .footer,
+  .customer-receipt .footer {
+    display: block !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 5px 0 0 !important;
+    border: none !important;
+  }
+  .customer-receipt .footer {
+    border-top: 1px dashed #000 !important;
+  }
+  .footer-thanks,
+  .footer-visit {
+    font-size: 11px !important;
+    margin: 0 0 2px !important;
+  }
+
+  /* Token slip: one plain line per item, no rules between them */
+  .customer-receipt .customer-items {
+    padding: 4px 0 !important;
+    margin: 0 !important;
+  }
+  .customer-receipt .customer-items .item {
+    border: none !important;
+    padding: 1px 0 !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+  }
+}
+
+/* ===== DELETE-CONFIRM BUTTONS ON PAGES WITHOUT Modals.css =====
+ *
+ * The bill register's delete dialogs (and the shared .modal-note family)
+ * use .btn-cancel / .btn-delete, but those classes are properly styled in
+ * components/modals/Modals.css, which only the settings and queue modals
+ * import. Unstyled here, the legacy sheet made Cancel a pale paper-grey
+ * slab with near-invisible text and left Delete with no rule at all — a
+ * washed-out pair that clashed with the dark olive dialog. Style them from
+ * the theme tokens so every delete dialog reads the same in both themes.
+ * (Modals.css keeps winning where it is loaded — this block loads first.)
+ */
+.btn-cancel {
+  background: var(--modal-line);
+  color: var(--modal-ink);
+}
+.btn-cancel:hover:not(:disabled) {
+  background: var(--panel-4);
+}
+.btn-delete {
+  background: var(--danger-strong);
+  color: #fff;
+}
+.btn-delete:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+/* "Print bill" in the register's print dialog: the accent action. */
+.btn-print-bill {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 700;
+}
+.btn-print-bill:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn-print-bill:disabled,
+.btn-delete:disabled,
+.btn-cancel:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The empty-state note and the warning banner inside those dialogs sit on
+   the dark olive card, so they follow the dialog palette too. */
+.modal-note {
+  color: var(--modal-ink);
+  background: var(--modal-soft);
+  border-left: 3px solid var(--accent);
+}
+.modal-note-success {
+  border-left-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.modal-note-error {
+  background: var(--danger-soft);
+  border-left-color: var(--danger);
+  color: var(--danger-soft-text);
+}
+.modal-note-warn {
+  background: var(--warn-soft);
+  border-left-color: var(--warn);
+  color: var(--warn-soft-text);
+}
+
+/* The header's two icon boxes must line up: the row centers its children,
+   but a stale nudge here pushed the settings gear 10px below the right-hand
+   action buttons. Every icon column now hangs from the same centerline. */
+header.header .header-icons,
+header.header .header-actions {
+  margin-top: 0 !important;
+}

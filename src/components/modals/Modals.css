@@ -1,0 +1,1064 @@
+.modal-overlay, .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+.modal-content {
+  background: var(--modal-bg);
+  border-radius: 16px;
+  padding: 18px;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  animation: modalSlideIn 0.3s ease;
+  max-height: 92vh;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+}
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modal-header h2 {
+  margin: 0;
+  color: var(--modal-ink);
+  font-size: 22px;
+  font-weight: 700;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--muted);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+.modal-close:hover {
+  background: var(--modal-line);
+  color: var(--modal-ink);
+}
+.modal-body {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* --- floor plan (Tables overview) ---------------------------------------- */
+
+.tables-modal {
+  max-width: 560px !important;
+}
+
+.tables-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.legend-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: currentColor;
+}
+
+.legend-vacant { background: var(--hover); color: var(--muted); }
+.legend-occupied { background: var(--info-soft); color: var(--info-soft-text); }
+.legend-preparing { background: var(--warn-soft); color: var(--warn-soft-text); }
+.legend-ready { background: var(--accent-soft); color: var(--accent-soft-text); }
+.legend-served { background: rgba(77, 208, 160, 0.14); color: var(--ok); }
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.floor-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 108px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 2px solid var(--modal-line);
+  background: var(--modal-soft);
+  cursor: default;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.floor-table:not(:disabled):hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.floor-table:disabled {
+  opacity: 0.72;
+}
+
+.floor-table-number {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--modal-ink);
+}
+
+.floor-table-status {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--modal-muted);
+}
+
+.floor-table-vacant {
+  border-style: dashed;
+  background: transparent;
+}
+
+.floor-status-occupied { color: var(--info-soft-text); }
+.floor-status-preparing { color: var(--warn-soft-text); }
+.floor-status-ready { color: var(--accent-soft-text); }
+.floor-status-served { color: var(--ok); }
+
+.floor-table-meta {
+  font-size: 12px;
+  color: var(--modal-ink);
+  font-weight: 600;
+}
+
+.floor-table-time {
+  font-size: 10px;
+  color: var(--modal-muted);
+}
+
+/* The legacy sheet styles `.form-group input` for text boxes (width 100%,
+   thick glow border, big padding) - that also stretched the little tick
+   boxes into wide green rectangles. Checkboxes keep their natural size. */
+.modal-content input[type='checkbox'],
+.modal-content input[type='radio'] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  accent-color: var(--accent);
+  cursor: pointer;
+  transition: none;
+}
+
+/* Forms in Modal */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--modal-muted);
+  font-size: 14px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--modal-line);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--modal-ink);
+  transition: all 0.2s ease;
+  background: var(--modal-bg);
+  box-sizing: border-box;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(163,230,53,0.15);
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Every dialog is a fixed-height card: the header and the action row stay
+   visible, and the form body scrolls between them. The tall Edit-item dialog
+   used to rely on `overflow-y: visible`, which pushed its Cancel/Save row
+   below the viewport. */
+.modal-content .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.modal-content > .modal-actions {
+  flex-shrink: 0;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--modal-line);
+}
+
+/* Dialogs whose markup has no .modal-body wrapper scroll as a whole but keep
+   the action row pinned with sticky positioning. */
+.modal-content > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: -6px 0 0;
+}
+
+.modal-content > form > .modal-actions {
+  position: sticky;
+  bottom: -6px;
+  background: var(--modal-bg);
+}
+.btn-cancel, .btn-add {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-cancel {
+  background: var(--modal-line);
+  color: var(--modal-ink);
+}
+.btn-cancel:hover {
+  background: #d1d5db;
+}
+.btn-add {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--accent-contrast);
+}
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 179, 0, 0.4);
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Size Selection */
+.size-selection-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+.size-btn {
+  background: linear-gradient(135deg, var(--panel-5) 0%, var(--panel) 100%);
+  border: 1px solid rgba(163, 230, 53, 0.3);
+  border-radius: 8px;
+  padding: 20px 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.size-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(163, 230, 53, 0.15);
+  background: linear-gradient(135deg, var(--panel-4) 0%, var(--panel-5) 100%);
+}
+.size-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--modal-ink);
+  margin-bottom: 8px;
+}
+.size-price {
+  font-size: 16px;
+  color: var(--warn);
+  font-weight: bold;
+}
+
+/* ==================== SETTINGS MODALS LAYOUT ==================== */
+.add-menu-split {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+/* --- group item: sizes-and-prices editor --------------------------------- */
+
+.group-sizes-editor {
+  margin-bottom: 16px;
+}
+.group-sizes-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.group-sizes-head label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--modal-ink);
+}
+.group-size-add-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.group-size-add-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.group-size-add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.group-size-row {
+  display: grid;
+  grid-template-columns: 1fr 110px 34px;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.group-size-row input {
+  min-height: 40px;
+  padding: 9px 12px;
+  border: 1px solid var(--modal-line);
+  border-radius: 8px;
+  background: var(--modal-bg);
+  color: var(--modal-ink);
+  font-size: 14px;
+  min-width: 0;
+}
+.group-size-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.group-size-remove-btn {
+  border: none;
+  background: var(--danger-soft);
+  color: var(--danger-soft-text);
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.group-size-remove-btn:hover:not(:disabled) {
+  background: var(--danger);
+  color: #fff;
+}
+.group-size-remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.add-menu-tab {
+  background: transparent;
+  border: 1px solid var(--modal-line);
+  color: var(--modal-muted);
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.add-menu-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+.add-menu-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.add-menu-left {
+  flex: 1;
+}
+.add-menu-right {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+}
+.preview-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.edit-menu-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+.edit-menu-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--modal-soft);
+  border-right: 1px solid var(--modal-line);
+  padding-right: 20px;
+  border-radius: 8px 0 0 8px;
+}
+.edit-menu-sidebar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 10px 0;
+}
+.edit-menu-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 10px;
+}
+.edit-menu-sidebar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--modal-ink);
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.edit-menu-sidebar-btn:hover {
+  background: var(--modal-line);
+}
+.edit-menu-sidebar-btn.active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: bold;
+}
+.edit-menu-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.delete-category-toolbar, .delete-menu-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.delete-category-toolbar-btn, .delete-menu-toolbar-btn {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.delete-category-toolbar-btn.secondary, .delete-menu-toolbar-btn.secondary {
+  background: var(--panel-2);
+  color: var(--text-soft);
+}
+.delete-category-count, .delete-menu-count {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--muted);
+}
+/* Category deletion uses the same tap-to-select card grid as the
+   delete-items modal (`.delete-card-item` below); only the column count
+   differs because category names are short. */
+.delete-category-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
+  padding-right: 8px;
+}
+.delete-category-list .delete-card-item {
+  min-height: 72px;
+  background: linear-gradient(135deg, var(--panel-5) 0%, var(--panel) 100%);
+}
+.delete-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
+  padding-right: 8px;
+}
+.delete-card-item {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.delete-card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.delete-card-item.selected {
+  border-color: var(--danger-strong);
+  transform: scale(0.96);
+  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.5);
+}
+.delete-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 71, 87, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border-radius: inherit;
+}
+.delete-card-checkmark {
+  background: var(--danger-strong);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 768px) {
+  .add-menu-split {
+    flex-direction: column;
+  }
+  .add-menu-right {
+    width: 100%;
+  }
+  .edit-menu-layout {
+    flex-direction: column;
+  }
+  .edit-menu-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding-right: 0;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px 8px 0 0;
+  }
+  .edit-menu-category-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    max-height: none;
+  }
+  .delete-menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.menu-modal-content {
+  width: 90%;
+  max-width: 650px !important;
+}
+.edit-menu-modal-content {
+  width: 95%;
+  max-width: 850px !important;
+}
+.category-modal-content {
+  width: 95%;
+  max-width: 450px !important;
+}
+
+/* --- SETTINGS MODAL REFINEMENTS (both themes) --- */
+.category-modal-content, .menu-modal-content, .edit-menu-modal-content {
+  background: var(--modal-bg) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+}
+.category-modal-content .modal-header h2, .menu-modal-content .modal-header h2, .edit-menu-modal-content .modal-header h2 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--modal-ink) !important;
+}
+.category-modal-content .modal-close, .menu-modal-content .modal-close, .edit-menu-modal-content .modal-close {
+  color: var(--muted) !important;
+  font-size: 24px !important;
+}
+.category-modal-content .form-group label, .menu-modal-content .form-group label, .edit-menu-modal-content .form-group label {
+  color: var(--modal-muted) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+.category-modal-content .form-group input, .category-modal-content .form-group select, .menu-modal-content .form-group input, .menu-modal-content .form-group select, .edit-menu-modal-content .form-group input, .edit-menu-modal-content .form-group select {
+  border: 1px solid var(--accent) !important;
+  border-radius: 8px !important;
+  background: var(--modal-bg) !important;
+  color: var(--modal-ink) !important;
+}
+.category-modal-content .form-group input:focus, .menu-modal-content .form-group input:focus, .edit-menu-modal-content .form-group input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2) !important;
+}
+.category-modal-content .btn-cancel, .menu-modal-content .btn-cancel, .edit-menu-modal-content .btn-cancel {
+  background: var(--modal-line) !important;
+  color: var(--modal-ink) !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+.category-modal-content .btn-add, .menu-modal-content .btn-add, .edit-menu-modal-content .btn-add, .category-modal-content .btn-delete, .edit-menu-modal-content .btn-delete {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.category-modal-content .btn-delete, .edit-menu-modal-content .btn-delete {
+  background: var(--danger-strong) !important;
+  color: #fff !important;
+}
+.edit-menu-sidebar-title {
+  color: var(--muted) !important;
+}
+.edit-menu-sidebar-btn {
+  color: var(--modal-ink) !important;
+}
+.edit-menu-sidebar-btn.active {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  font-weight: 700 !important;
+}
+.delete-category-toolbar-btn, .delete-menu-toolbar-btn {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+}
+.delete-category-toolbar-btn.secondary, .delete-menu-toolbar-btn.secondary {
+  background: var(--modal-line) !important;
+  color: var(--modal-ink) !important;
+}
+
+/* --- TABLE PLAN ON PHONES ------------------------------------------
+ * The grid's 140px minimum forced a 3-up grid at phone width and pushed
+ * the tenth table below the screen; the dialog itself has no height cap
+ * of its own, so it just ran off the page. Two columns and a viewport-
+ * bounded body keep the whole floor visible without the page scroll. */
+@media (max-width: 900px) {
+  .tables-modal {
+    max-height: calc(100dvh - 32px);
+  }
+  .tables-modal .modal-body {
+    max-height: none;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .tables-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .floor-table {
+    min-height: 92px;
+    padding: 10px 6px;
+  }
+}
+
+/* The round "+" add-item button is a background shortcut for the bill;
+   while any dialog is open it just overlaps them (it floats above the
+   overlay on phones), so park it until the dialog closes. */
+body:has(.modal-overlay) .add-custom-btn {
+  display: none;
+}
+
+/* ==================== PHONES: SETTINGS DIALOGS ====================
+ * Two shared-overlay bugs shredded the tall menu dialogs on phones: the
+ * overlay centres its child, so a dialog taller than the viewport lost its
+ * header (and close button) above the top edge with no way to scroll; and
+ * the stacked form split kept `align-items: flex-start`, letting each field
+ * group shrink to its own ragged width. The live card preview also kept the
+ * menu browser's 4:3 poster size, eating half the dialog. */
+@media (max-width: 600px) {
+  .modal-overlay {
+    /* Top-anchor and scroll instead of centre-clip: the header and the
+       primary action always stay reachable on a small screen. */
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+  .modal-overlay .modal-content {
+    margin: 16px auto;
+  }
+
+  .add-menu-split {
+    align-items: stretch;
+  }
+  .add-menu-left,
+  .add-menu-right {
+    width: 100%;
+  }
+
+  /* A 4:3 poster inside a dialog is dead space at this width; a short
+     banner keeps the point of the preview without the height. */
+  .menu-item-preview {
+    aspect-ratio: auto;
+    height: 120px;
+  }
+  .menu-item-preview .item-name {
+    font-size: 15px;
+  }
+  .menu-item-preview .item-price {
+    font-size: 14px;
+  }
+}
+
+/* ==================== SERVER PORTAL: TABLE PEEK CARD ====================
+ * In the server portal the floor plan is read-only: tapping a table flips a
+ * small card over the cell listing what the table ordered - nothing loads
+ * into the order panel. */
+
+.floor-table {
+  position: relative;
+}
+
+.floor-table.is-peeked {
+  border-color: var(--accent);
+  /* Lift the whole cell so its popover paints above every neighbouring
+     cell - otherwise cells further down the DOM cover the card. */
+  z-index: 40;
+}
+
+/* The popover floats free of the cell, anchored just below it with an arrow,
+   like a hover tooltip - the cell stays visible behind it. Opening downward
+   means a bottom-row popover simply extends the modal's scroll area instead
+   of being clipped at the top. */
+.floor-peek {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: max-content;
+  min-width: 210px;
+  max-width: 258px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--modal-bg);
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  text-align: left;
+}
+
+/* Arrow pointing back at the cell. */
+.floor-peek::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: var(--modal-bg);
+  border-left: 1.5px solid var(--accent);
+  border-top: 1.5px solid var(--accent);
+  border-top-left-radius: 3px;
+}
+
+/* Above the cell when there is no room below it (bottom rows). */
+.floor-table.is-flipped .floor-peek {
+  top: auto;
+  bottom: calc(100% + 9px);
+}
+
+.floor-table.is-flipped .floor-peek::before {
+  top: auto;
+  bottom: -7px;
+  border: none;
+  border-right: 1.5px solid var(--accent);
+  border-bottom: 1.5px solid var(--accent);
+  border-bottom-right-radius: 3px;
+}
+
+/* Edge columns: a centered ~250px card would poke outside the modal, so
+   anchor it to the cell edge facing the plan's interior instead. */
+.floor-table.is-align-left .floor-peek {
+  left: 0;
+  transform: none;
+}
+
+.floor-table.is-align-left .floor-peek::before {
+  left: 26px;
+}
+
+.floor-table.is-align-right .floor-peek {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.floor-table.is-align-right .floor-peek::before {
+  left: auto;
+  right: 26px;
+}
+
+.floor-peek-order {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.floor-peek-order + .floor-peek-order {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--modal-line);
+}
+
+/* Status label with the order's delete bin at its right. */
+.floor-peek-order-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.floor-peek-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 107, 107, 0.45);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--danger-strong, #ff6b6b);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.floor-peek-delete svg {
+  width: 15px;
+  height: 15px;
+}
+.floor-peek-delete:hover {
+  background: var(--danger-soft, rgba(255, 107, 107, 0.14));
+  border-color: var(--danger-strong, #ff6b6b);
+}
+.floor-peek-btn.danger {
+  background: var(--danger-strong, #ff6b6b);
+  color: #fff;
+}
+.floor-peek-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.floor-peek-status {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.floor-peek-item {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--modal-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Slim scroll thumb matching the rest of the app. */
+.floor-peek::-webkit-scrollbar {
+  width: 6px;
+}
+
+.floor-peek::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.floor-peek::-webkit-scrollbar-thumb {
+  background: var(--modal-line);
+  border-radius: 10px;
+}
+
+.floor-peek-total {
+  padding-top: 8px;
+  border-top: 1px solid var(--modal-line);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--modal-ink);
+  text-align: right;
+}
+
+/* Counter actions on the peek card (billing portal only): load the whole
+   table onto the bill, or arm it so new menu clicks go to the kitchen. */
+.floor-peek-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.floor-peek-btn {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.floor-peek-btn:hover { filter: brightness(1.12); }
+
+.floor-peek-btn.primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.floor-peek-btn.ghost {
+  background: transparent;
+  border: 1.5px solid var(--modal-line);
+  color: var(--modal-ink);
+}
+
+/* Emergency pull-bill confirm and delete-order confirm. Stacks above the
+   table-plan overlay so it covers the plan without closing it; "Go back"
+   returns to the plan.
+
+   These rules carry !important deliberately: the legacy sheet ships a
+   (width<=768px) block that pins every .modal-content to width:100% with a
+   top margin, and .confirm-modal p inherits the pale --line-strong body
+   colour — together they rendered these dialogs as a full-bleed, top-glued
+   card with unreadable grey text. Scoped here, the later-loaded sheet wins
+   the cascade. */
+.pull-bill-confirm-overlay {
+  z-index: 200;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* .modal-overlay parent lifts specificity above the legacy (width<=768px)
+   .modal-content { width:100% !important } block, which otherwise pins the
+   dialog full-bleed to the viewport edges whatever the source order. */
+.modal-overlay .pull-bill-confirm {
+  width: auto !important;
+  max-width: min(420px, calc(100vw - 32px)) !important;
+  margin: 0 !important;
+  padding: 22px 24px !important;
+  text-align: center;
+}
+
+.modal-overlay .pull-bill-confirm h3 {
+  margin: 0 0 8px;
+  color: var(--danger-strong, #e57373) !important;
+  font-size: 18px;
+}
+
+/* Body copy and the red caution strip must stay readable in both themes:
+   the shared .confirm-modal p rule paints text with --line-strong (#555),
+   invisible on the dark dialog. */
+.pull-bill-confirm p {
+  color: var(--text) !important;
+}
+
+.pull-bill-confirm .confirm-warning {
+  color: var(--danger-soft-text) !important;
+  text-align: left;
+}
+
+.pull-bill-confirm-actions {
+  justify-content: center;
+  gap: 10px;
+}
+
+.pull-bill-confirm-actions .floor-peek-btn {
+  flex: 0 1 auto;
+  min-width: 120px;
+  padding: 10px 18px;
+  font-size: 13px;
+}
+
+/* Occupied cells with a card, and vacant cells the counter can start an
+   order on, behave like buttons. */
+.floor-table.is-tappable {
+  cursor: pointer;
+}
+
+.floor-table.is-tappable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.floor-table-vacant.is-tappable {
+  border-style: dashed;
+  cursor: pointer;
+}
+
+.floor-table-vacant.is-tappable:hover {
+  border-color: var(--accent);
+  color: var(--modal-ink);
+}

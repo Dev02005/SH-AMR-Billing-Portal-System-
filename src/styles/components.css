@@ -1,0 +1,842 @@
+/* ==========================================================================
+   Styles for the shared components introduced during the restructure.
+   Kept in one file so the legacy index.css stays untouched and it is obvious
+   which rules belong to the current component tree.
+   ========================================================================== */
+
+/* --- layout shells ------------------------------------------------------ */
+
+/* The bill panel used to stretch to the full container height, leaving a
+   large empty gap between the last item and the buttons. Sizing it to its
+   contents puts "Send order" right under the total, where a waiter's thumb
+   already is. */
+.server-layout .bill,
+.billing-layout .bill {
+  align-self: flex-start;
+  max-height: calc(100vh - 110px);
+  overflow: hidden;
+}
+
+/* On short windows the capped card height used to clip the Total and the
+   Print/Clear buttons. Pin them to the bottom of the card; only the item
+   list scrolls, exactly like the receipt this panel imitates. */
+.server-layout .bill-items,
+.billing-layout .bill-items {
+  flex: 1 1 auto;
+  min-height: 60px;
+  max-height: none;
+  overflow-y: auto;
+}
+
+.server-layout .total-section,
+.billing-layout .total-section {
+  flex-shrink: 0;
+}
+
+.server-layout .actions,
+.billing-layout .actions {
+  flex-shrink: 0;
+}
+
+/* The thank-you / visit-again block belongs on the printed receipt only,
+   not in the on-screen bill panel. */
+.billing-layout .bill .footer {
+  display: none;
+}
+
+@media print {
+  .billing-layout .bill .footer {
+    display: block;
+  }
+}
+
+/* The action row is pinned to the bottom of the bill panel so "Send order"
+   stays in reach while the waiter scrolls the cart. It shares the receipt's
+   paper palette - a dark panel bar inside the light paper card read as a
+   random black stripe. */
+/* Footer action bar: a band that closes the card. The card's chrome is a
+   2px border around 10px padding, so the bar bleeds 10px a side to seat
+   itself against the border's inner edge (radius 12 − 2 = 10) while the
+   green outline stays visible around it — the old -14px assumed a
+   different padding and left the buttons overhanging the card's edges.
+   The width is explicit because flex cross-stretch ignores negative
+   right margins on the stacked layout. */
+.server-layout .actions {
+  gap: 8px;
+  padding: 12px;
+  width: calc(100% + 20px);
+  margin: 12px -10px 0;
+  background: var(--paper-2);
+  border-top: 1px solid var(--line-strong);
+  border-radius: 0 0 10px 10px;
+}
+
+/* The index.css zoom hack pads the card 24px at the bottom; with the bar in
+   place that padding only floated the buttons 12px above the card's bottom
+   edge. The bar itself closes the card now. */
+.server-layout .bill {
+  padding-bottom: 0 !important;
+}
+
+/* Stacked layout widens the card's side padding to 12px, so the bleed has
+   to follow or the bar ends up short on the right. */
+@media screen and (width <= 900px) {
+  .server-layout .actions {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+}
+
+.server-layout .actions button {
+  flex: 1;
+  min-height: 46px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Three equal red buttons gave no hint which one sends the order. */
+.server-layout .actions .clear {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  /* The legacy .clear rule leaves a red danger glow behind; on the paper
+     bar it reads as a smudge. */
+  box-shadow: none;
+}
+
+.server-layout .actions .clear:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text-strong);
+}
+
+.server-layout .actions .print {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  flex: 1.4;
+}
+
+.server-layout .actions .print:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.server-layout .actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* --- bill controls (table / payment / order type / discount) ------------- */
+
+.bill-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  /* Paper family: this band sits inside the light receipt card, so a
+     translucent black strip read as a random dark band in both themes. */
+  background: var(--paper-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+}
+
+.bill-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.bill-field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+.bill-field .discount-input {
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.bill-field .discount-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.22);
+}
+
+@media (max-width: 480px) {
+  .bill-controls { grid-template-columns: 1fr; }
+}
+
+/* --- route guard -------------------------------------------------------- */
+
+.access-denied {
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 28px 32px;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text);
+  text-align: center;
+}
+
+.access-denied h2 {
+  margin: 0 0 10px;
+  color: var(--danger);
+}
+
+.access-denied p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.access-denied-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: var(--print-text);
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* --- menu browser ------------------------------------------------------- */
+
+/* .menu-item is a <button> now, so undo the UA button styling that would
+   otherwise override the card look inherited from index.css. */
+.menu-item {
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  width: 100%;
+  appearance: none;
+}
+
+.menu-item-info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.menu-item-preview {
+  pointer-events: none;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  cursor: default;
+}
+
+.menu-message {
+  grid-column: 1 / -1;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.menu-message-error {
+  color: var(--danger-strong);
+}
+
+/* --- bill panel --------------------------------------------------------- */
+
+.bill-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.bill-header-row .bill-number {
+  font-size: 13px;
+  font-weight: 600;
+  /* Receipt ink: this row sits on the paper-white card, so the theme's text
+     colour (white in dark mode) rendered it invisible. */
+  color: var(--ink);
+}
+
+.bill-fineprint {
+  font-size: 10px;
+}
+
+.bill-error {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  background: rgba(198, 40, 40, 0.15);
+  border-left: 3px solid var(--danger);
+  border-radius: 4px;
+  color: var(--danger-strong);
+  font-size: 12px;
+}
+
+.discount-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--text-strong);
+  font-size: 14px;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 3px;
+  color: var(--text);
+}
+
+.total-line-discount {
+  color: var(--danger-strong);
+}
+
+.footer-thanks {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.footer {
+  margin-top: 4px;
+  color: var(--text);
+  text-align: center;
+}
+
+/* --- server portal status ---------------------------------------------- */
+
+.server-status {
+  margin: 8px 0 0;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.server-status-ok {
+  background: rgba(77, 208, 160, 0.18);
+  border-left: 3px solid var(--ok);
+  color: var(--ok);
+}
+
+.server-status-error {
+  background: rgba(198, 40, 40, 0.15);
+  border-left: 3px solid var(--danger);
+  color: var(--danger-strong);
+}
+
+/* --- modals -------------------------------------------------------------
+   .modal-content is a white card, so everything inside it is dark-on-light -
+   the app's normal light-on-dark palette is invisible here.
+   ---------------------------------------------------------------------- */
+
+.modal-wide {
+  max-width: 560px;
+}
+
+.modal-note {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+  background: var(--info-soft);
+}
+
+.modal-note-error {
+  background: var(--danger-soft);
+  border-left: 3px solid var(--danger);
+  color: var(--danger-soft-text);
+}
+
+.modal-note-warn {
+  background: var(--warn-soft);
+  border-left: 3px solid var(--warn);
+  color: var(--warn-soft-text);
+}
+
+.field-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.confirm-modal {
+  max-width: 420px;
+  text-align: center;
+}
+
+.confirm-modal h3 {
+  margin: 0 0 8px;
+  color: var(--text-strong);
+  font-size: 18px;
+}
+
+.confirm-modal p {
+  margin: 0 0 8px;
+  color: var(--line-strong);
+  font-size: 14px;
+}
+
+.confirm-detail {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.confirm-warning {
+  padding: 10px 12px;
+  background: var(--danger-soft);
+  border-left: 3px solid var(--danger);
+  border-radius: 4px;
+  text-align: left;
+  font-size: 12px;
+  color: var(--danger-soft-text);
+}
+
+/* --- queue / open-table cards ------------------------------------------- */
+
+.queue-list {
+  display: grid;
+  gap: 12px;
+}
+
+.queue-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--panel-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--text-strong);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.queue-card:hover,
+.queue-card:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(124, 181, 24, 0.25);
+}
+
+.queue-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-bottom: 3px;
+}
+
+.queue-card-meta {
+  font-size: 13px;
+  color: var(--info-soft-text);
+}
+
+.queue-card-time {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.queue-discard {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.queue-discard:hover:not(:disabled) {
+  background: var(--danger);
+  color: var(--text-strong);
+}
+
+.queue-discard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- header / login ----------------------------------------------------- */
+
+.login-brand-line {
+  white-space: nowrap;
+}
+
+/* --- analytics ---------------------------------------------------------- */
+
+.analytics-message {
+  padding: 20px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.analytics-message-error {
+  color: var(--danger-strong);
+}
+
+.stat-value-small {
+  font-size: 28px;
+}
+
+.stat-week .stat-value { color: var(--ok); }
+.stat-month .stat-value { color: #ffb74d; }
+
+.align-center { text-align: center; }
+.align-right { text-align: right; }
+
+.register-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.register-header h3 {
+  margin: 0;
+}
+
+.register-count {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+.register-pager {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* "Manage bill": pick a row from the current page and delete it. Lives next
+   to the pager arrows; the row table itself stays clean of action buttons. */
+.manage-bill {
+  position: relative;
+}
+
+.manage-bill-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 30;
+  min-width: 300px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px var(--shadow);
+  padding: 6px;
+}
+
+.manage-bill-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.manage-bill-item:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.manage-bill-item:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.manage-bill-token {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 34px;
+}
+
+.manage-bill-action .manage-bill-token.danger {
+  color: var(--danger-strong);
+}
+
+/* --- bulk bill delete ----------------------------------------------------- */
+
+.bulk-delete-modal {
+  max-width: 640px !important;
+}
+
+.bulk-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--modal-line);
+  margin-bottom: 10px;
+}
+
+.bulk-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--modal-ink);
+  cursor: pointer;
+}
+
+.bulk-summary {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-soft-text);
+}
+
+.bulk-day {
+  margin-bottom: 14px;
+}
+
+.bulk-day-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  background: var(--modal-soft);
+  cursor: pointer;
+  color: var(--modal-ink);
+}
+
+.bulk-day-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--modal-muted);
+}
+
+.bulk-day-list {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bulk-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: var(--modal-ink);
+}
+
+.bulk-row:hover {
+  background: var(--hover);
+}
+
+.bulk-row.checked {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.bulk-row-token {
+  font-weight: 700;
+  min-width: 30px;
+}
+
+.bulk-row-time {
+  flex: 1;
+  font-size: 12px;
+  color: var(--modal-muted);
+}
+
+.bulk-row-amount {
+  font-weight: 700;
+}
+
+.bulk-row-pay {
+  font-size: 12px;
+  color: var(--modal-muted);
+  min-width: 52px;
+  text-align: right;
+}
+
+.register-total {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 14px;
+  background: var(--hover);
+  border-top: 2px solid var(--line-strong);
+  border-radius: 0 0 8px 8px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* --- print -------------------------------------------------------------- */
+
+@media print {
+  /* Screen chrome that has no place on a thermal receipt. */
+  .server-status,
+  .bill-error,
+  .modal-overlay,
+  .add-custom-btn,
+  .kitchen-board {
+    display: none !important;
+  }
+
+  /* The receipt prints on white paper, so the panel's light-on-dark text
+     has to flip back to black. */
+  .bill-header-row .bill-number,
+  .total-line,
+  .footer {
+    color: var(--print-text) !important;
+  }
+
+  .total-line-discount {
+    color: var(--text-soft) !important;
+  }
+}
+
+/* --- category tabs ------------------------------------------------------ */
+
+/* The legacy active-tab rule paints a gold gradient, but the green re-skin
+   aliased --gold and --gold-dark to --accent, so the selected tab rendered
+   exactly like the unselected ones and the cashier lost track of the category
+   they were in. Give the selection its own colour and a clear marker. */
+.tabs button.active {
+  background-image: none;
+  background-color: #ffd54f;
+  color: #1a1a1a;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(255, 179, 0, 0.45);
+}
+
+.tabs button:not(.active) {
+  opacity: 0.82;
+}
+
+.tabs button:not(.active):hover {
+  opacity: 1;
+}
+
+/* Balanced, full-width rows: MenuBrowser sets --tab-columns to the number of
+   tabs per row, and every tab grows so each row - the last one included -
+   spans the whole bar. Overrides the old fixed 160px cap and per-button
+   margins, which left each row ending in empty space. */
+.left .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.left .tabs button {
+  /* border-box so the padding sits inside the share; the half pixel keeps
+     sub-pixel rounding from pushing the last tab of a row onto the next. */
+  box-sizing: border-box;
+  flex: 1 1 calc((100% - (var(--tab-columns, 1) - 1) * 10px) / var(--tab-columns, 1) - 0.5px);
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.confirm-detail {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* --- header action cluster ---------------------------------------------- */
+
+/* The old wrapper was `position: static` with `flex: 1`, so the menu it held
+   anchored to the page rather than the button and drifted across the
+   restaurant name. The menus are portalled now; this just lines the buttons up. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* A red count on a header icon: tables served but not billed yet. */
+.header .icon-btn {
+  position: relative;
+}
+.icon-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Manual refresh beside the settings gear (kitchen board): the arrow spins
+   while the reload runs. */
+.refresh-btn.is-refreshing svg {
+  animation: refresh-spin 0.8s linear infinite;
+}
+.refresh-btn:disabled {
+  cursor: progress;
+}
+/* The header reserves a single 42px icon slot; with the refresh button the
+   slot grows so the two sit side by side instead of wrapping. */
+header.header .header-icons.has-refresh {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  flex-wrap: nowrap !important;
+}
+@keyframes refresh-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refresh-btn.is-refreshing svg {
+    animation: none;
+    opacity: 0.5;
+  }
+}

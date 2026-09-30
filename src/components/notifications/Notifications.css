@@ -1,0 +1,127 @@
+/* Notification cards, stacked bottom-right so they never sit over the bill
+   panel's action buttons. */
+
+.notice-stack {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(380px, calc(100vw - 36px));
+  pointer-events: none;
+}
+
+.notice {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left-width: 4px;
+  background: var(--panel-3);
+  color: var(--text);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: notice-in 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.notice-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.notice-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.notice-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+}
+
+.notice-message {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}
+
+.notice-close {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.notice-close svg {
+  width: 13px;
+  height: 13px;
+}
+
+.notice-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+/* Tone is carried by the left edge and the icon, so the card itself stays
+   readable in a dim dining room. */
+.notice-info { border-left-color: var(--muted); }
+.notice-info .notice-icon { color: var(--muted); }
+
+.notice-success { border-left-color: var(--accent); }
+.notice-success .notice-icon,
+.notice-success .notice-title { color: var(--accent); }
+
+.notice-error { border-left-color: var(--danger); }
+.notice-error .notice-icon,
+.notice-error .notice-title { color: var(--danger-strong); }
+
+/* "Food is up" is the one a waiter must not miss. */
+.notice-ready {
+  border-left-color: var(--warn);
+  background: linear-gradient(135deg, var(--panel-5) 0%, var(--panel-3) 60%);
+}
+
+.notice-ready .notice-icon,
+.notice-ready .notice-title { color: var(--warn); }
+
+.notice-served { border-left-color: var(--ok); }
+.notice-served .notice-icon,
+.notice-served .notice-title { color: var(--ok); }
+
+@keyframes notice-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .notice-stack {
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+    width: auto;
+  }
+}
+
+@media print {
+  .notice-stack { display: none !important; }
+}

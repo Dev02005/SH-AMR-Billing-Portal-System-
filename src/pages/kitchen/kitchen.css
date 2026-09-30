@@ -1,0 +1,226 @@
+/* Kitchen order board.
+   Sized for a wall-mounted screen read from a couple of metres away: large
+   type, high contrast, one column per stage of the ticket's life. */
+
+.kitchen-board {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  align-items: stretch;
+}
+
+.kitchen-note,
+.column-empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 24px 0;
+  font-size: 16px;
+}
+
+.kitchen-error {
+  background: rgba(198, 40, 40, 0.15);
+  border-left: 4px solid var(--danger);
+  color: var(--danger-strong);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.kitchen-error span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.kitchen-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.kitchen-column {
+  background: var(--scroll-track);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 120px;
+}
+
+.column-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-count {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 13px;
+}
+
+.column-new .column-title { color: var(--accent); }
+.column-preparing .column-title { color: var(--warn); }
+.column-ready .column-title { color: var(--ok); }
+
+/* --- ticket --- */
+
+.ticket {
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-left-width: 6px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.ticket-preparing { border-color: var(--warn); }
+.ticket-ready { border-color: var(--ok); opacity: 0.75; }
+
+.ticket-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ticket-table {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.ticket-meta {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ticket-timing {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticket-age {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* An order sitting past 20 minutes needs to be visible from across the kitchen. */
+.ticket-age.is-late { color: var(--warn-strong); }
+
+.ticket-clock {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ticket-items {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ticket-items li {
+  display: flex;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.ticket-qty {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 32px;
+}
+
+.ticket-preparing .ticket-qty { color: var(--warn); }
+.ticket-ready .ticket-qty { color: var(--ok); }
+
+.ticket-name { flex: 1; }
+
+/* Final handover call for a ready ticket - the cook's last job on this order
+   is to walk it out, so say so in one glanceable banner. */
+.ticket-handover {
+  background: var(--ok);
+  color: #101408;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.ticket-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.ticket-status {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.ticket-action {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.ticket-action:hover:not(:disabled) { filter: brightness(1.1); }
+
+.ticket-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ticket-preparing .ticket-action { background: var(--warn); }
+
+.kitchen-footnote {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  margin: 0;
+}
+
+/* The board fills the page between the header and the footer, and the status
+   line ("Board refreshes every 8 seconds …") sits at its bottom - always just
+   above the footer, not wherever the orders happen to end. */
+main.kitchen-board {
+  flex: 1 0 auto;
+}
+main.kitchen-board > .kitchen-footnote {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .kitchen-columns { grid-template-columns: 1fr; }
+}
