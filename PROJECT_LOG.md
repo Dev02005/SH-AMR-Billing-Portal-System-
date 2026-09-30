@@ -24,6 +24,12 @@ recommendation.
 
 ---
 
+## 1 Oct 2026 — README rewritten
+- The README was a long mix of staff guide, history and developer notes, and listed the staff login emails. Rewritten for GitHub: logo and badges, contents, screenshots, features per portal, an order-flow diagram (Mermaid), tech stack, running locally, configuration, Vercel deployment, accounts and passwords (roles only — no emails, no passwords), data (bill numbers, six-month deletion, Excel report, backups), troubleshooting, and a developer section (structure, API reference generated from the routes, conventions, testing) in fold-outs. History stays here in PROJECT_LOG.md. Every link, image and in-page anchor checked; rendered with GitHub's dark markdown style to check the layout and diagram.
+- **Screenshots** (`docs/screenshots/`, 5 JPEGs, 76–196 KB): taken in a headless Edge from the local dev server with the real menu and made-up orders and bills; nothing sent to the API.
+- Found while doing it: the analytics tables centred every text cell under a left-aligned heading (a global `td { text-align: center }` meant for the bill table). Headings now line up with their columns — text left, counts centred, money right — on all three tables. And `src/api/index.js` had two statements on one line (from an earlier edit), now split. Lint and build clean.
+- Noticed in the live menu (not changed): one item is named "Paneer TikkaPaneer TikkaV".
+
 ## 30 Sep 2026 — Phone fixes after going live; full screen
 Reported from the owner's phone on the live site:
 - **Login title off-centre, gap left after installing.** The brand always kept 84px on its right for the Install button (phones), so it centred in what was left — and kept that room after the portal was installed and the button disappeared. Now: on phones the button gets a small row of its own at the top right and the brand is centred on the whole screen; with no button, no room is kept (`:has(> .install-app:empty)`). Measured on all three login pages at 375, 800 and 1280px, with and without the button: title, tagline, portal name and login box 0px off centre, button never overlapping; header 173 → 132px on a phone once installed.
