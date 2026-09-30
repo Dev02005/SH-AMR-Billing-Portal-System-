@@ -155,13 +155,22 @@ set with the command above). There is no limit on wrong password tries, so
 
 Bills older than `BILL_RETENTION_DAYS` (180) are deleted automatically when
 `BILL_RETENTION_ENABLED=true`. **It is switched on in this installation**
-(since 30 Sep 2026): the API deletes expired bills when it starts and then
-every 6 hours while it runs. The startup log says what happened:
+(since 30 Sep 2026). The bills are erased from the database (not hidden).
 
-```
-Retention: deleted 20 bill(s) created before 03 Apr 2026
-Retention: scheduled every 6 hours
-```
+- **On a computer or an ordinary server** (`python app.py`) the API deletes
+  expired bills when it starts and then every 6 hours while it runs. The
+  startup log says what happened:
+
+  ```
+  Retention: deleted 20 bill(s) created before 03 Apr 2026
+  Retention: scheduled every 6 hours
+  ```
+
+- **On Vercel**, where the API only runs while it answers a request, Vercel's
+  scheduler calls it once a day at about 03:00 IST (`crons` in `vercel.json`
+  → `/api/cron/retention`). That address refuses every caller that does not
+  send `CRON_SECRET`, which Vercel does by itself. Each run shows in the
+  project's *Logs*.
 
 Deleted bills cannot be recovered and disappear from the analytics page and
 the Excel report, so **download each month's Excel report and keep it**
@@ -185,8 +194,8 @@ npm install && npm run dev
 
 The API listens on `http://localhost:5000`, the web app on
 `http://localhost:5173`; open `http://localhost:5173/billing/login`. The web
-app forwards `/api` and `/uploads` to the API, so the pages always talk to the
-address they were loaded from.
+app forwards `/api` to the API, so the pages always talk to the address they
+were loaded from.
 
 To keep them running in the background with logs:
 
@@ -215,7 +224,8 @@ Backend settings come from `.env` in this directory (see `.env.example`):
 | `TZ_OFFSET_MINUTES`          | `330`                  | IST. Drives "today" and the nightly bill-number reset              |
 | `BILL_RETENTION_DAYS`        | `180`                  | How old a bill must be to count as expired                         |
 | `BILL_RETENTION_ENABLED`     | `False`                | `true` here — see [Six-month bill deletion](#six-month-bill-deletion) |
-| `MAX_UPLOAD_MB`              | `8`                    | Menu image upload size limit                                       |
+| `CRON_SECRET`                | *(none)*               | Vercel only: lets Vercel's daily cron run the six-month deletion   |
+| `MAX_UPLOAD_MB`              | `8`                    | Largest request the API accepts (Vercel stops at 4.5 MB anyway)    |
 
 The front end reads two settings at build time: `VITE_API_URL`, the API's
 address (leave it empty when the pages and the API share one address), and
@@ -224,35 +234,67 @@ which knows its address; set it for a custom domain).
 
 ## Deploying (Vercel)
 
-To use the portals on devices that are not on the same network, both parts
-must be on the internet with **https**.
+The pages **and** the API run in one Vercel project at one https address, so
+the portals work on any device, on any network. `vercel.json` sets it up:
 
-**1. The pages on Vercel.** Import this folder as a Vercel project. `vercel.json`
-already sets the build (`npm run build` → `dist`) and sends every page address
-(`/billing/login`, `/kitchen`, …) to the app, so reloading a page works.
+- The pages are built (`npm run build` → `dist`), and every page address
+  (`/billing/login`, `/kitchen`, …) opens the app, so reloading a page works.
+- Every `/api/…` request goes to one Python function, `api/index.py` — the
+  same Flask app `python app.py` runs. Vercel installs `requirements.txt`.
+- The function runs in Mumbai (`bom1`), next to the MongoDB Atlas cluster
+  (AWS `ap-south-1`), so database calls stay quick.
+- Once a day, at about 03:00 IST, Vercel's cron runs the six-month deletion.
 
-**2. The API.** It is a normal Python (Flask) server and needs somewhere to run:
+**Steps**
 
-- *On another host* (a service that runs Python servers, or a small cloud
-  server): set `VITE_API_URL` in the Vercel project to the API's https address
-  and redeploy, and set `CORS_ORIGINS` on the API to the Vercel address, e.g.
-  `CORS_ORIGINS=https://sh-mandi.vercel.app`.
-- *At the same address as the pages* (for example behind the same domain):
-  leave `VITE_API_URL` empty; `CORS_ORIGINS` then does not matter.
+1. Put this folder on GitHub (`.gitignore` already keeps `.env`, `backups/`,
+   `logs/` and `node_modules/` out) and import the repository into Vercel.
+   The build settings come from `vercel.json`; nothing to change.
+2. Vercel project → *Settings → Environment Variables*: add these for
+   **Production** with **Sensitive** switched on (the value can then only be
+   replaced, never read back):
 
-`CORS_ORIGINS` in plain words: it is the list of websites allowed to use the
-API from a browser. With `*` any website could try; with your Vercel address
-only your own pages can.
+   | Key                      | Value                              |
+   |--------------------------|------------------------------------|
+   | `MONGO_URI`              | as in `.env`                       |
+   | `JWT_SECRET_KEY`         | as in `.env`                       |
+   | `BILL_RETENTION_ENABLED` | `true`                             |
+   | `CRON_SECRET`            | as in `.env`                       |
 
-**3. On the API host**, set the same variables as `.env` (at least `MONGO_URI`,
-`JWT_SECRET_KEY`, `BILL_RETENTION_ENABLED`, `CORS_ORIGINS`) and keep `DEBUG`
-off. In MongoDB Atlas → *Network Access*, allow the API host's address.
+   Do not add `VITE_API_URL` or `CORS_ORIGINS` — pages and API share one
+   address. Keep *Enable access to System Environment Variables* ticked (the
+   link-preview tags use Vercel's own address).
+3. MongoDB Atlas → *Network Access* → add `0.0.0.0/0` (allow from anywhere):
+   Vercel has no fixed address. The database password then guards the data,
+   so make it a strong one.
+4. Deploy — or *Redeploy* after changing a variable.
+5. Check `https://<your-project>.vercel.app/api/health` says
+   `"database": "connected"`, then sign in on each portal.
+
+**Limits to know.**
+
+- Vercel's free (Hobby) plan is for personal, non-commercial use; a business
+  is expected to be on Pro.
+- Each screen asks the API for news only while it is on show: the kitchen
+  board every 8 s, the table list and notifications every 10 s, nothing while
+  the window is hidden or the phone screen is off. With all three portals open
+  that is about 25 requests a minute — roughly 650,000 a month at 14 hours a
+  day.
+- After a quiet spell, the first request takes 1–3 s longer while Vercel
+  starts the API.
+- Vercel refuses requests over 4.5 MB. Menu pictures are web links or small
+  pictures kept in the database, never files on the server.
+
+**The API somewhere else.** `python app.py` also runs as an ordinary server
+(keeping the 6-hour deletion timer). Then set `VITE_API_URL` on Vercel to its
+https address and redeploy, and set `CORS_ORIGINS` on that server to the
+Vercel address, e.g. `https://sh-mandi.vercel.app`. (`CORS_ORIGINS` in plain
+words: the websites allowed to use the API from a browser.)
 
 **Before going live:** change the staff passwords from the simple test ones,
 and stop using the older billing program (it writes to the same database with
 its own bill numbers). Over https the **Install app** button installs each
-portal as a real app on phones too. Menu pictures are web links, so nothing
-has to be stored on the API host.
+portal as a real app on phones too.
 
 ### Installing a portal as an app
 
@@ -306,8 +348,9 @@ What is in place:
 ## Layout
 
 ```
-app.py                  entrypoint: builds the app and runs it
-vercel.json             Vercel build settings and page-address rewrites
+app.py                  entrypoint on a computer: builds the app and runs it
+api/index.py            entrypoint on Vercel: the same app as one Python function
+vercel.json             Vercel: build, /api → api/index.py, Mumbai region, daily cron
 server/
   __init__.py           create_app(): config, CORS, JWT, blueprints, startup warnings
   config.py             every setting, read from .env
@@ -329,7 +372,7 @@ server/
     print_queue.py      waiter → cashier print requests
     reports.py          the Excel sales report download
     notifications.py    delivery of kitchen notices to the other portals
-    system.py           health check, uploaded images
+    system.py           health check, daily six-month deletion call (Vercel cron)
 
 src/
   main.jsx, App.jsx     start-up and the routes (/billing, /server, /kitchen)

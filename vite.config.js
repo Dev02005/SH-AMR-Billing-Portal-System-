@@ -36,7 +36,6 @@ export default defineConfig(({ mode }) => {
       // the portals work unchanged when the app is served from the backend.
       proxy: {
         '/api': { target: apiTarget, changeOrigin: true },
-        '/uploads': { target: apiTarget, changeOrigin: true },
       },
     },
 
