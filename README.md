@@ -61,7 +61,10 @@ admin only) from every bill in the range.
 
 Waiters pick items and a table and send the order. The kitchen board shows
 each order as a ticket (new → preparing → ready → handed over); the refresh
-button beside the gear reloads it at once.
+button beside the gear reloads it at once. Both have **Full screen** in the
+gear menu (hides the browser bars; Esc, the back gesture or *Exit full screen*
+leave it). iPhones only allow full screen for videos, so it is not offered
+there; iPads, Android phones and computers have it.
 
 ### Every portal
 
