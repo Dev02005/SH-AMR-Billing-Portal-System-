@@ -1,0 +1,31 @@
+{
+  "id": "/billing",
+  "name": "S&H Arabian Mandi — Billing Portal",
+  "short_name": "S&H Billing",
+  "description": "The Billing Portal of S&H Arabian Mandi Restaurant.",
+  "start_url": "/billing",
+  "scope": "/billing",
+  "display": "standalone",
+  "background_color": "#0F120D",
+  "theme_color": "#0F120D",
+  "icons": [
+    {
+      "src": "/icons/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

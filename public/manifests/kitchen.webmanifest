@@ -1,0 +1,31 @@
+{
+  "id": "/kitchen",
+  "name": "S&H Arabian Mandi — Kitchen Portal",
+  "short_name": "S&H Kitchen",
+  "description": "The Kitchen Portal of S&H Arabian Mandi Restaurant.",
+  "start_url": "/kitchen",
+  "scope": "/kitchen",
+  "display": "standalone",
+  "background_color": "#0F120D",
+  "theme_color": "#0F120D",
+  "icons": [
+    {
+      "src": "/icons/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

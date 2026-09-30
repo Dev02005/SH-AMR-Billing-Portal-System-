@@ -1,0 +1,5 @@
+# S&H Arabian Mandi Restaurant - staff billing, server and kitchen portals.
+# Every page carries <meta name="robots" content="noindex, nofollow">, so the
+# portals stay out of search results while link previews still work.
+User-agent: *
+Disallow: /api/
