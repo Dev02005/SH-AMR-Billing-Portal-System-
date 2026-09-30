@@ -27,7 +27,7 @@ function sizesFromItem(item) {
 // instead of the browser's own "Please enter a URL" bubble.
 function imageError(imageUrl) {
   const value = imageUrl.trim();
-  if (!value || /^(https?:\/\/|data:image\/|\/uploads\/)/i.test(value)) return '';
+  if (!value || /^(https?:\/\/|data:image\/)/i.test(value)) return '';
   return 'The image link must start with http:// or https:// (or leave it empty).';
 }
 

@@ -4,9 +4,13 @@ import { errorMessage } from '../api/client';
 /**
  * Run an async fetcher on mount and then on an interval.
  *
- * Used by the kitchen board and the print queue, which both need to see new
- * orders without the staff reloading the page. A ref guards against a slow
- * response landing after the component has unmounted.
+ * Used by the kitchen board, the table plan and the print queue, which need
+ * to see new orders without the staff reloading the page. A ref guards
+ * against a slow response landing after the component has unmounted.
+ *
+ * Polls run only while the page is on screen: a minimised window, another tab
+ * or a phone with its screen off asks nothing, and catches up the moment it is
+ * visible again. Every poll is a request the host counts (and bills).
  */
 export default function usePolling(fetcher, intervalMs = 0, deps = []) {
   const [data, setData] = useState(null);
@@ -46,10 +50,15 @@ export default function usePolling(fetcher, intervalMs = 0, deps = []) {
 
     if (!intervalMs) return () => { mounted.current = false; };
 
-    const id = setInterval(() => refresh({ silent: true }), intervalMs);
+    const pollIfVisible = () => {
+      if (document.visibilityState === 'visible') refresh({ silent: true });
+    };
+    const id = setInterval(pollIfVisible, intervalMs);
+    document.addEventListener('visibilitychange', pollIfVisible);
     return () => {
       mounted.current = false;
       clearInterval(id);
+      document.removeEventListener('visibilitychange', pollIfVisible);
     };
   }, [refresh, intervalMs]);
 

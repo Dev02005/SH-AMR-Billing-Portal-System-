@@ -47,10 +47,19 @@ class Config:
     # from the pages. Not needed when pages and API share one address.
     CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
 
-    # --- Uploads ---
-    UPLOAD_FOLDER = BASE_DIR / "uploads"
-    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+    # --- Requests ---
+    # Largest request accepted. Menu pictures are web links or small data:
+    # images kept in the database, never files on disk. (Vercel caps any
+    # request at 4.5 MB on its own.)
     MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_MB", "8")) * 1024 * 1024
+
+    # --- Hosting ---
+    # Vercel sets VERCEL=1 inside its functions. There the API runs as
+    # short-lived functions with no background timer, so the six-month deletion
+    # runs from Vercel's daily cron instead (vercel.json -> /api/cron/retention),
+    # which proves it is Vercel calling by sending CRON_SECRET.
+    ON_VERCEL = os.getenv("VERCEL") == "1"
+    CRON_SECRET = os.getenv("CRON_SECRET")
 
     # --- Business rules ---
     # Local wall-clock offset used for "today", daily bill-number resets and

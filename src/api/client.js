@@ -5,18 +5,16 @@ import { clearSession, getToken } from './session';
  * The API origin.
  *
  * By default requests go to the same address the page was loaded from; the
- * Vite server forwards /api and /uploads to the Flask API (vite.config.js).
+ * Vite server forwards /api to the Flask API (vite.config.js).
  * That way a waiter's phone or a second till reaches the restaurant server,
  * not "localhost" on its own device. Set VITE_API_URL only when the API lives
- * on a different address from the web app.
+ * on a different address from the web app (a trailing "/" is ignored).
  */
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
-/** Turn a root-relative asset path from the API into a loadable URL. */
+/** A menu picture the browser may load - a web link or a data: image - or null. */
 export function assetUrl(path) {
-  if (!path) return null;
-  if (/^(https?:|data:)/.test(path)) return path;
-  return `${API_BASE}${path}`;
+  return typeof path === 'string' && /^(https?:|data:image\/)/i.test(path) ? path : null;
 }
 
 const client = axios.create({

@@ -40,7 +40,7 @@ def _register_error_handlers(app: Flask) -> None:
     @app.errorhandler(413)
     def payload_too_large(_error):
         limit_mb = config.MAX_CONTENT_LENGTH // (1024 * 1024)
-        return jsonify({"success": False, "error": f"File too large (max {limit_mb} MB)"}), 413
+        return jsonify({"success": False, "error": f"Request too large (max {limit_mb} MB)"}), 413
 
     @app.errorhandler(500)
     def internal_error(error):
@@ -91,7 +91,7 @@ def create_app() -> Flask:
 
     CORS(
         app,
-        resources={r"/api/*": {"origins": config.CORS_ORIGINS}, r"/uploads/*": {"origins": config.CORS_ORIGINS}},
+        resources={r"/api/*": {"origins": config.CORS_ORIGINS}},
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     )
 
@@ -103,15 +103,16 @@ def create_app() -> Flask:
         from server import bootstrap, retention
 
         bootstrap.run()
-        retention.start()
+        # A long-running server keeps its own 6-hour timer; on Vercel the
+        # daily cron calls /api/cron/retention instead.
+        if not config.ON_VERCEL:
+            retention.start()
     else:
         logger.error("Starting without a database connection - API calls will return 503.")
 
     from server.routes import register_blueprints
 
     register_blueprints(app)
-
-    config.UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 
     @app.before_request
     def _log_request():

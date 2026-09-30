@@ -3,14 +3,11 @@
 import json
 import logging
 import re
-import uuid
-from pathlib import Path
 
 from flask import Blueprint, request
 
 from server import db
 from server.api import fail, handle_errors, ok, roles_required
-from server.config import config
 from server.timeutil import utc_now
 
 logger = logging.getLogger(__name__)
@@ -41,23 +38,13 @@ def _ensure_category(name: str, user: dict) -> None:
     )
 
 
-def _allowed_image(filename: str) -> bool:
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in config.ALLOWED_EXTENSIONS
-
-
 def _image_url(item: dict) -> str | None:
-    """Resolve an item's image to something the browser can load.
-
-    Uploaded files come back root-relative ("/uploads/x.webp"); the client
-    prefixes them with its API origin. An absolute URL baked in here would
-    hard-code whichever host happened to serve the request, which broke images
-    for every terminal except the one the server runs on.
-    """
+    """An item's picture as something the browser can load: a web link, or a
+    picture kept in the database (a data: image, or the older till's base64
+    fields). Pictures are never files on the server's disk."""
     stored = item.get("image")
-    if isinstance(stored, str) and stored:
-        if stored.startswith(("http://", "https://", "data:")):
-            return stored
-        return f"/uploads/{stored}"
+    if isinstance(stored, str) and stored.startswith(("http://", "https://", "data:")):
+        return stored
     if item.get("image_base64"):
         mime = item.get("image_mime") or "image/jpeg"
         return "data:" + mime + ";base64," + item["image_base64"]
@@ -80,32 +67,8 @@ def _serialize(item: dict) -> dict:
 
 
 def _normalise_image(value) -> str | None:
-    """Store an uploaded image as a bare filename, an external image as its URL.
-
-    The client sends back whatever ``_image_url`` produced, so a stored file
-    arrives as "/uploads/<file>" and must be unwrapped before it is saved -
-    otherwise the prefix accumulates on every edit.
-    """
-    text = str(value or "").strip()
-    if not text:
-        return None
-    if text.startswith("/uploads/"):
-        return text[len("/uploads/"):] or None
-    return text
-
-
-def _save_upload(file_storage) -> str | None:
-    """Persist an uploaded image and return its generated filename."""
-    if not file_storage or not file_storage.filename:
-        return None
-    if not _allowed_image(file_storage.filename):
-        return None
-    suffix = Path(file_storage.filename).suffix.lower() or ".jpg"
-    filename = str(uuid.uuid4()) + suffix
-    config.UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-    file_storage.save(config.UPLOAD_FOLDER / filename)
-    logger.info("Saved menu image %s", filename)
-    return filename
+    """A picture is stored as the link (or data: image) the admin entered."""
+    return str(value or "").strip() or None
 
 
 def _parse_group_prices(data) -> dict | None:
@@ -147,7 +110,7 @@ def list_items(user):
 @roles_required("admin", "cashier")
 @handle_errors
 def create_item(user):
-    """Add a menu item. Accepts multipart form data with an optional image."""
+    """Add a menu item (form data; the picture, if any, is a link in image_url)."""
     form = request.form
     name = form.get("name", "").strip()
     if not name:
@@ -157,13 +120,10 @@ def create_item(user):
         return fail("An item with this name already exists", 400)
 
     category = (form.get("category") or "custom").strip().lower()
-    image_url = (form.get("image_url") or "").strip()
-    image_filename = None if image_url else _save_upload(request.files.get("image"))
-
     item = {
         "name": name,
         "category": category,
-        "image": image_url or image_filename,
+        "image": _normalise_image(form.get("image_url")),
         "createdAt": utc_now(),
         "createdBy": str(user["_id"]),
     }

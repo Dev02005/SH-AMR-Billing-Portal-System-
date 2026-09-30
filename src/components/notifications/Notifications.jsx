@@ -16,8 +16,9 @@ import './Notifications.css';
  * dismissed it - awkward on a touch screen mid-service.
  */
 
-/** How often a portal asks the API for notices aimed at its role. */
-const POLL_MS = 6000;
+/** How often a portal asks the API for notices aimed at its role - the same
+ *  pace as the table lists. Only while the page is on screen (see poll). */
+const POLL_MS = 10000;
 
 const AUTO_DISMISS_MS = { info: 4000, success: 4000, error: 8000, ready: 15000, served: 12000 };
 
@@ -150,8 +151,10 @@ export function NotificationProvider({ children, listen = false }) {
     let inFlight = false;
 
     const poll = async () => {
-      // Skip a tick rather than stacking requests when the server is slow.
-      if (inFlight || !isSignedIn()) return;
+      // Skip a tick rather than stacking requests when the server is slow, and
+      // ask nothing while the page is hidden (minimised, another tab, phone
+      // screen off) - it catches up as soon as it is visible again.
+      if (inFlight || !isSignedIn() || document.visibilityState !== 'visible') return;
       inFlight = true;
       try {
         const incoming = await fetchNotifications();
@@ -190,9 +193,11 @@ export function NotificationProvider({ children, listen = false }) {
 
     poll();
     const timer = setInterval(poll, POLL_MS);
+    document.addEventListener('visibilitychange', poll);
     return () => {
       active = false;
       clearInterval(timer);
+      document.removeEventListener('visibilitychange', poll);
     };
   }, [listen]);
 

@@ -5,9 +5,10 @@ database stays small. Deleting sales records cannot be undone, so the purge
 only runs when ``BILL_RETENTION_ENABLED=true`` is set in ``.env``; otherwise
 every pass is a dry run that logs what *would* go.
 
-When enabled it runs at startup and then every ``INTERVAL_HOURS`` in a
-background thread. The first version ran only at startup, which meant a till
-left running for weeks never purged at all.
+On a normal server it runs at startup and then every ``INTERVAL_HOURS`` in a
+background thread (the first version ran only at startup, so a till left
+running for weeks never purged). On Vercel, where nothing runs between
+requests, Vercel's daily cron calls ``run_once`` through /api/cron/retention.
 """
 
 import logging
