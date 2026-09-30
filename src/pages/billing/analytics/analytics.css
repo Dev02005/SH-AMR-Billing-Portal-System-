@@ -283,6 +283,21 @@
 .report-table tbody tr:hover {
   background: rgba(255, 213, 79, 0.05);
 }
+/* Headings line up with their figures: text on the left, counts in the
+   middle, money on the right. (The bill table's global `td { text-align:
+   center }` used to centre every text cell under a left-aligned heading.) */
+.report-table td {
+  text-align: left;
+}
+.report-table td.qty-cell,
+.report-table td.no-data,
+.report-table th.align-center {
+  text-align: center;
+}
+.report-table td.amount-cell,
+.report-table th.align-right {
+  text-align: right;
+}
 .amount-cell {
   color: var(--gold);
   font-weight: bold;

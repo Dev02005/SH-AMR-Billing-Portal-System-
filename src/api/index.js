@@ -54,7 +54,9 @@ export const deleteBillPermanently = (id) =>
 
 // ------------------------------------------------------------ print queue
 
-export const sendToPrintQueue = (bill) => client.post('/api/print-queue', bill).then((r) => r.data);export const fetchPrintQueue = () => client.get('/api/print-queue').then((r) => r.data.requests || []);
+export const sendToPrintQueue = (bill) => client.post('/api/print-queue', bill).then((r) => r.data);
+
+export const fetchPrintQueue = () => client.get('/api/print-queue').then((r) => r.data.requests || []);
 
 export const deletePrintRequest = (id) =>
   client.delete(`/api/print-queue/${id}`).then((r) => r.data);
