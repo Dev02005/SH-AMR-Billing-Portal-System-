@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>S&H Arabian Mandi Restaurant — Billing, Server &amp; Kitchen POS</title>
+    <meta
+      name="description"
+      content="Point-of-sale portals for S&H Arabian Mandi Restaurant, Sangivalasa, Visakhapatnam — fast thermal-print billing, live table and kitchen tracking, and sales analytics for Mandi, Chinese, Tandoori, Meals, Snacks and Biryani."
+    />
+    <meta name="author" content="S&H Arabian Mandi Restaurant" />
+    <meta name="application-name" content="S&H Arabian Mandi POS" />
+    <!-- Staff portals: kept out of search results (see public/robots.txt). -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0F120D" />
+
+    <!-- Apply the saved theme before React loads: no dark flash for light-mode users. Mirrors src/styles/theme.js. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var theme = saved === 'light' || saved === 'dark'
+            ? saved
+            : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.classList.toggle('theme-light', theme === 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) { /* private mode etc. — React applies the fallback */ }
+      })();
+    </script>
+
+    <!-- Each portal installs as its own app: link that portal's manifest
+         before the browser reads it. Mirrors src/config/portals.js. -->
+    <script>
+      (function () {
+        var portal = location.pathname.split('/')[1];
+        if (['billing', 'server', 'kitchen'].indexOf(portal) === -1) portal = 'billing';
+        var manifest = document.createElement('link');
+        manifest.rel = 'manifest';
+        manifest.href = '/manifests/' + portal + '.webmanifest';
+        document.head.appendChild(manifest);
+      })();
+    </script>
+
+    <!-- Link previews (WhatsApp, Facebook, X …). The full-address tags og:url
+         and og:image are added at build time - see linkPreview() in vite.config.js. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="S&H Arabian Mandi Restaurant" />
+    <meta property="og:title" content="S&H Arabian Mandi Restaurant — POS" />
+    <meta
+      property="og:description"
+      content="Billing, server and kitchen portals for S&H Arabian Mandi Restaurant — Mandi | Chinese | Tandoori | Meals | Snacks | Biryani."
+    />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- The restaurant logo (see scripts/make_app_icons.py). -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" href="/icons/logo-64.png" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/icons/logo-maskable-512.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="font-family: sans-serif; padding: 2rem; text-align: center">
+        S&amp;H Arabian Mandi Restaurant POS needs JavaScript enabled.
+        Call us on 9703932144 to place an order.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
