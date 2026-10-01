@@ -31,6 +31,7 @@ Mandi · Chinese · Tandoori · Meals · Snacks · Biryani — Sangivalasa, Visa
 - [Configuration](#configuration)
 - [Deploy to Vercel](#deploy-to-vercel)
 - [Staff accounts and passwords](#staff-accounts-and-passwords)
+- [Printer setup (once per counter PC)](#printer-setup-once-per-counter-pc)
 - [Your data: bills, reports and deletion](#your-data-bills-reports-and-deletion)
 - [Troubleshooting](#troubleshooting)
 - [For developers](#for-developers)
@@ -78,9 +79,11 @@ Each portal opens at its own login page, e.g. `/kitchen/login`.
   where an item has them), set quantities, table, payment (Cash, Card, UPI,
   Zomato, Swiggy, Pending), order type and a discount %. The **＋** button adds
   a one-off item.
-- **Printed bill and token slip** for a **70 mm thermal printer**: bill number,
-  date and time, items, totals and *"Thank you! 🙏 Visit again 🙏"*, followed by
-  the customer's token slip (items only). Each slip is cut where it ends.
+- **Printed bill and token slip** for an **80 mm thermal printer** (e.g. TVS
+  RP3200 Lite): bill number, date and time, items, totals and *"Thank you! 🙏
+  Visit again 🙏"*, then the customer's token slip (items only) on its own page,
+  so the cutter separates them. Set the printer up once — see
+  [Printer setup](#printer-setup-once-per-counter-pc).
 - **Table plan** — every table and its orders at a glance. A **red number** on
   the icon counts tables that have been served but not billed yet. From a table:
   **Load bill**, **Add items**, or delete an order.
@@ -301,6 +304,33 @@ password (never the password itself).
 - There is no limit on wrong password attempts, so use **strong passwords** on
   the live site.
 
+## Printer setup (once per counter PC)
+
+The bill prints from the browser, so the **print dialog and the printer's own
+settings** decide the paper. Set them once; Chrome and Edge remember them for
+that printer.
+
+1. **In the print dialog** (press *Print* on a bill), choose the thermal
+   printer, open **More settings** and set:
+   - **Paper size:** the printer's 80 mm receipt / roll size
+   - **Margins:** None
+   - **Scale:** Default
+   - **Headers and footers:** off (unticked)
+2. **If blank paper still comes out after each slip**, open Windows **Settings
+   → Bluetooth & devices → Printers & scanners → *your printer* → Printing
+   preferences**, choose the same 80 mm receipt size there, and switch on the
+   driver's option that stops at the end of the printed lines (names differ:
+   *paper saving*, *reduce blank space*, *feed/cut at end of page*). Set the
+   cutter to cut **after each page**, so the bill and the token slip come out
+   separately.
+3. Optional, for one-tap printing without the dialog: start Chrome on the
+   counter PC with the `--kiosk-printing` option (add it to the end of the
+   Chrome shortcut's *Target*); it then prints straight to the default printer
+   with those settings.
+
+The print preview always shows the whole paper; whether the blank part is fed
+depends on step 2.
+
 ## Your data: bills, reports and deletion
 
 ### Bill numbers
@@ -346,6 +376,7 @@ Roman, black only, a border on every cell, A4 with page numbers.
 | No *Full screen* on iPhone | Apple only allows full screen for videos |
 | First screen is slow after a quiet spell | Vercel is waking the API up (1–3 s) |
 | *"This order has already been billed on another counter"* | It was — another counter printed it first |
+| Bill prints with big gaps, the date or the web address | Do the [printer setup](#printer-setup-once-per-counter-pc) once on that PC |
 | Local app doesn't open after a restart | Start `python app.py` and `npm run dev` again |
 
 ## For developers
@@ -383,7 +414,7 @@ src/                       React web app
   hooks/                   useMenu, useCart, usePolling, usePageTitle
   components/              auth/, layout/, ui/, notifications/, menu/, modals/, receipt/, settings/
   pages/                   billing/ (+ analytics/), server/, kitchen/
-  utils/                   format, printPages (70 mm slips), install, fullscreen, zoom, sizes, download
+  utils/                   format, install, fullscreen, zoom, sizes, download
 
 public/                    icons, favicon, robots.txt, per-portal manifests, service worker
 brand/logo-original.jpg    the logo the icons are made from (scripts/make_app_icons.py)
