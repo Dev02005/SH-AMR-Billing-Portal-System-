@@ -2,12 +2,11 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { RESTAURANT } from '../../config/brand.js';
 import { rupees } from '../../utils/format';
-import { clearPrintPages, fitPrintPages } from '../../utils/printPages';
 
 /**
  * Print a saved bill again, laid out exactly like the slip the Print button
  * produces in BillingDashboard: the same classes, so the same print rules
- * (monospace look, 70 mm width, page fitted to the slip) apply. Keep the
+ * (monospace look, 70 mm width, token slip on its own page) apply. Keep the
  * markup in step with the `.bill` block there.
  *
  * Mounted only while printing. It renders into <body>, beside the app root,
@@ -18,15 +17,12 @@ export default function ReprintBill({ bill, onDone }) {
     document.body.classList.add('reprinting');
     // Let the slip paint before the print dialog snapshots the page.
     const timer = setTimeout(() => {
-      fitPrintPages();
       window.print();
-      clearPrintPages();
       document.body.classList.remove('reprinting');
       onDone();
     }, 60);
     return () => {
       clearTimeout(timer);
-      clearPrintPages();
       document.body.classList.remove('reprinting');
     };
   }, [bill, onDone]);

@@ -1929,10 +1929,14 @@ color:var(--muted);
 padding:40px 20px;
 font-style:italic
 }
-/* 70 mm thermal roll: no browser margins, no A4 scaling. Top-level @page —
-   Chromium ignores @page nested inside @media print. */
+/* Thermal roll: no margins, and deliberately no page size. With a real
+   printer Chrome/Edge print on the paper chosen in the print dialog and only
+   use a CSS size to centre the page on that paper (a bill in the middle of a
+   long page, a short token slip turned sideways). Without a size the slips
+   start at the top of the paper; zero margins also leave Chrome no room for
+   its date / address lines. Top-level @page - Chromium ignores @page nested
+   inside @media print. */
 @page{
-size:70mm;
 margin:0
 }
 

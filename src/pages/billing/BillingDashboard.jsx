@@ -21,7 +21,6 @@ import usePolling from '../../hooks/usePolling';
 import useCart from '../../hooks/useCart';
 import useMenu from '../../hooks/useMenu';
 import { rupees } from '../../utils/format';
-import { clearPrintPages, fitPrintPages } from '../../utils/printPages';
 import { RESTAURANT } from '../../config/brand.js';
 import { ORDER_TYPES, PAYMENT_METHODS, tableOptions } from '../../config/constants';
 
@@ -61,17 +60,6 @@ export default function BillingDashboard() {
   }, []);
 
   useEffect(() => { refreshBillNumber(); }, [refreshBillNumber]);
-
-  // Fit each printed page to its slip so the roll is cut where the slip
-  // ends. On beforeprint, so Ctrl+P gets the same pages as the Print button.
-  useEffect(() => {
-    window.addEventListener('beforeprint', fitPrintPages);
-    window.addEventListener('afterprint', clearPrintPages);
-    return () => {
-      window.removeEventListener('beforeprint', fitPrintPages);
-      window.removeEventListener('afterprint', clearPrintPages);
-    };
-  }, []);
 
   useEffect(() => {
     const openQueue = () => setShowQueue(true);
