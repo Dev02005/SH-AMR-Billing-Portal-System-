@@ -24,6 +24,17 @@ recommendation.
 
 ---
 
+## 1 Oct 2026 — "Item not found" when editing on the live site
+- **Reported:** Edit menu item → Save changes on "barbequ mandi" (live site) said *Item not found*; the item exists with exactly that name.
+- **Cause:** item and category names travel in the address (`PUT /api/custom-items/barbequ%20mandi`). Every WSGI server decodes the path before Flask sees it (`/api/custom-items/barbequ mandi`), but **Vercel's Python runtime passes it still encoded**, so Flask looked for an item literally named `barbequ%20mandi`. Shown with harmless requests to an unknown address: live answered `"path": "/api/nope/barbequ%20mandi"`, local `"/api/nope/barbequ mandi"`. Every item or category with a space (most of the menu, "veg starters", "non-veg starters") could not be edited or deleted on the live site.
+- **Fix** (`api/index.py`, Vercel only): a small WSGI wrapper decodes `PATH_INFO` (to latin-1 bytes, as PEP 3333 expects; Werkzeug then reads UTF-8) before Flask routes it. Tested the way Vercel calls it — encoded `PATH_INFO`, throwaway copy of the menu: without the fix the exact *Item not found*; with it the edit saves (trio 799 / squad 1299, the stray duo ₹10 size removed), rename-then-edit works, categories with a space or an accent delete with their items, plain addresses unchanged — 9/9. Scratch database dropped.
+- The live item still has the ₹10 *duo* size from an earlier edit until the owner saves it again after this fix is deployed.
+
+## 1 Oct 2026 — Staff passwords found changed; reset
+- Checked the stored (bcrypt) passwords against the owner's list: admin and waiter1–3 were right, but the **cashier's password had been changed** (its `passwordChangedAt` still says 30 Sep 16:07, so it was not changed with `server.passwords` — something else rewrote it), and **cook1 and cook2 had no password**: both accounts had been deleted and were re-created without one by the API's start-up (`bootstrap`, which re-creates missing accounts) at 18:26 IST today. The most likely culprit is the **older till program**, which still writes to this database (its "Cash / UPI" bills keep appearing). Nothing in this app deletes accounts or changes passwords other than the password command.
+- Reset cashier, cook1 and cook2 to the owner's staff password with `python -m server.passwords set … --stdin` (password typed through stdin, not saved anywhere). Verified all seven: stored password correct and a real sign-in through the API works for each; the admin refuses the staff password. No file in the project contains a password.
+- Open: find and stop the older till program, or it may change accounts again.
+
 ## 1 Oct 2026 — Printing on the real thermal printer (TVS RP3200 Lite)
 - **Reported:** the print preview on the counter PC showed the bill on a page far taller than the slip, the token slip on a wide landscape page, and Chrome's date / title / address / page numbers on both.
 - **Cause:** the slips were given exact CSS page sizes (`printPages.js`: 70 mm × measured height). That works for "Save as PDF", but with a real printer driver Chrome/Edge print on the paper chosen in the dialog and only use the CSS size to place a smaller page *in the middle* of that paper and to pick the orientation — a token slip shorter than 70 mm counted as landscape and was turned sideways. Reproduced here with Edge and the "Microsoft Print to PDF" driver: the bill sat mid-page on A4 under Chrome's date and title.
